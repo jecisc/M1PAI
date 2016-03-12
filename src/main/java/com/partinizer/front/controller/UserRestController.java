@@ -1,12 +1,14 @@
 package com.partinizer.front.controller;
 
 import com.partinizer.business.manager.UserManager;
+import com.partinizer.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 
 
 /**
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class UserRestController {
 
+
     private UserManager userManager;
 
     @Autowired
@@ -24,10 +27,22 @@ public class UserRestController {
     }
 
     @RequestMapping(value="/{user}", method= RequestMethod.GET)
-    public void userTest(
-            @PathVariable("user") String user){
+    public User userTest(
+            @PathVariable("user") String user_){
 
+        System.out.println(user_);
 
-        System.out.println("TEST");
+        User user= new User();
+        user.setName("vincent");
+        user.setMail("vincentmargerin@gmail.com");
+        user.setPassword("password");
+        user.setRegistDate(new Date(System.currentTimeMillis()));
+        user.setActive(true);
+        user.setPseudo("jalzuritro");
+        user.setAvatar("");
+
+        // userManager.createUser(user);*/
+
+        return user;
     }
 }

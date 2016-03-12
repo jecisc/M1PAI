@@ -1,9 +1,8 @@
 package com.partinizer.data.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -11,27 +10,37 @@ import java.util.Date;
  */
 
 @Entity
+@Table(name="appliuser")
 public class User {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-
+    @Column(name="iduser")
+    @GenericGenerator(name="UserIdGenerator", strategy = "sequence",
+            parameters = { @Parameter(name="sequence", value="user_id_seq") } )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UserIdGenerator")
     private long id;
 
-    @Column('')
-    private String firstName;
+    @Column(name="name")
+    private String name;
 
-    private String lastName;
-
+    @Column(name="passwd")
     private String password;
 
+    @Column(name="email")
     private String mail;
 
+    @Column(name="inscription")
     private Date registDate ;
 
+    @Column(name="pseudo")
+    private String pseudo;
+
+    @Column(name="isactive")
     private boolean isActive;
 
+    @Column(name="avatar")
     private String avatar;
 
 
@@ -41,22 +50,6 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getMail() {
@@ -97,5 +90,21 @@ public class User {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPseudo() {
+        return pseudo;
+    }
+
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
     }
 }

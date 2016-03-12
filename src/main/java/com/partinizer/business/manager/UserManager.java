@@ -1,8 +1,10 @@
 package com.partinizer.business.manager;
 
+import com.partinizer.data.entity.User;
 import com.partinizer.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 
 
 /**
@@ -11,13 +13,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserManager {
 
-    @Autowired
+
     private UserRepository userRepository;
 
+    @Autowired
     public UserManager(UserRepository userRepository){
         this.userRepository=userRepository;
     }
 
 
+    public User createUser(User user){
+        user=userRepository.save(user);
+
+        return user;
     }
+
 }

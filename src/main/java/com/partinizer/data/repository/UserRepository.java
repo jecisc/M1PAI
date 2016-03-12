@@ -10,5 +10,5 @@ import com.partinizer.data.entity.User;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 
-    findUserByName();
+
 }
