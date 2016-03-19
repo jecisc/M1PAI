@@ -23,7 +23,8 @@ public class UserManager {
 
 
     public User createUser(User user){
-        user=userRepository.save(user);
+
+            user = userRepository.save(user);
 
         return user;
     }
