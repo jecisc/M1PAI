@@ -33,7 +33,8 @@ CACHE 1;
 CREATE TABLE APPLIUSER (
   idUser      INTEGER PRIMARY KEY   NOT NULL DEFAULT nextval('user_id_seq' :: REGCLASS),
   email       CHARACTER VARYING(64) NOT NULL,
-  name        CHARACTER VARYING(64) NOT NULL,
+  firstName   CHARACTER VARYING(64) NOT NULL,
+  lastName    CHARACTER VARYING(64) NOT NULL,
   pseudo      CHARACTER VARYING(64) NOT NULL,
   passwd      CHARACTER VARYING(64) NOT NULL,
   inscription DATE                  NOT NULL,
