@@ -1,0 +1,16 @@
+Sur windows:
+
+télécharger le .msi de npm (https://nodejs.org/dist/v4.4.1/node-v4.4.1-x86.msi)
+
+executer le .msi et installer nodeJS
+
+dans le menu démarrer -> Tous les programmes -> NodeJS -> NodeJS command prompt
+
+taper npm install -g bower
+
+une fois installer se déplacer dans le dossier src de l'app (pour moi cd TP/M1/M1PAI_GUI/src/)
+
+taper bower install bower.json
+
+J'ai eu une ambiguité avec la config et j'ai choisi l'option 3, puis c'est fini :)
+
