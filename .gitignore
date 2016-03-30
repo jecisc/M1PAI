@@ -1,3 +1,7 @@
 **/.DS_Store
 .idea/*
 **/*.iml
+target/*
+out/*
+doc/*
+lib/*
