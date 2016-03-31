@@ -10,5 +10,6 @@ import com.partinizer.data.entity.User;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 
-
+    User findByMail(String mail);
+    User findByPseudo(String pseudo);
 }

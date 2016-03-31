@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by vincent on 10/03/16.
  */
 @RestController
-@RequestMapping("/")
+@RequestMapping("/user")
 public class UserRestController {
 
 
@@ -26,7 +26,7 @@ public class UserRestController {
 
     /**Méthode de création d'un utilisateur basé sur une requête HTTP POST**/
     @CrossOrigin
-    @RequestMapping(value = "/", method=RequestMethod.POST)
+    @RequestMapping(value = "/create", method=RequestMethod.POST)
     public ResponseEntity<User> createUser(@RequestBody User user){
 
         if(user==null){
