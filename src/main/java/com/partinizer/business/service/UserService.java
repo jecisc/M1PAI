@@ -30,4 +30,10 @@ public class UserService {
 
         return user;
     }
+
+    public User getUserByMailOrPseudo(User user){
+        user=userManager.getUserByMailOrPseudo(user);
+
+        return user;
+    }
 }

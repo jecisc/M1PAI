@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-
 /**
  * Created by vincent on 10/03/16.
  */
@@ -24,6 +23,30 @@ public class UserRestController {
         this.userService=userService;
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "/login", method=RequestMethod.POST)
+    public ResponseEntity<String> login(@RequestBody User user){
+        if(user==null && user.getMail()!=null && user.getPassword()!=null){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+        User user_=userService.getUserByMailOrPseudo(user);
+
+        //On vérifie que la requête à renvoyé quelque chose à partir du mail
+        if(user_==null){
+            return new ResponseEntity<String>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(user.getPassword().equals(user_.getPassword()))
+           return new ResponseEntity<String>(HttpStatus.ACCEPTED);
+
+        //Mot de passe non correcte
+        return new ResponseEntity<String>(HttpStatus.NOT_ACCEPTABLE);
+    }
+
+
+
+
     /**Méthode de création d'un utilisateur basé sur une requête HTTP POST**/
     @CrossOrigin
     @RequestMapping(value = "/create", method=RequestMethod.POST)
@@ -35,6 +58,9 @@ public class UserRestController {
 
         user= userService.createUser(user);
 
+        if(user==null){
+            return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
+        }
 
             return new ResponseEntity<User>(user,HttpStatus.CREATED);
 
