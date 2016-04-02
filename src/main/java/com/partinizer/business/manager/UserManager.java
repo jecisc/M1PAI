@@ -87,10 +87,8 @@ public class UserManager {
 
         user = getUser(user);
 
-        if(user!=null)
-            return true;
+        return user != null;
 
-        return false;
     }
 
     private boolean checkPseudo(String pseudo){
