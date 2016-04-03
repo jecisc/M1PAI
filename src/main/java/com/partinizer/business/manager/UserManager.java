@@ -23,8 +23,7 @@ public class UserManager {
     public User createUser(User user){
 
         if(checkPseudo(user.getPseudo()) && checkPassword(user.getPassword())){
-            user = userRepository.save(user);
-            return user;
+            return userRepository.save(user);
         }
 
         return null;
@@ -32,9 +31,7 @@ public class UserManager {
 
     public User getUser(User user){
         if(validUser(user)){
-            user=userRepository.findOne(user.getId());
-
-            return user;
+            return userRepository.findOne(user.getId());
         }
 
         return null;
@@ -44,8 +41,7 @@ public class UserManager {
     public User getUserByMail(User user){
 
         if(user!=null && user.getMail()!=null && !user.getMail().equals("")) {
-            user = userRepository.findByMail(user.getMail());
-            return user;
+            return userRepository.findByMail(user.getMail());
         }
 
         return null;
@@ -54,8 +50,7 @@ public class UserManager {
     public User getUserByPseudo(User user){
 
         if(user!=null && user.getPseudo()!=null && !user.getPseudo().equals("")) {
-            user=userRepository.findByPseudo(user.getPseudo());
-            return user;
+            return userRepository.findByPseudo(user.getPseudo());
         }
 
         return null;
@@ -85,10 +80,7 @@ public class UserManager {
 
     private boolean userExist(User user){
 
-        user = getUser(user);
-
-        return user != null;
-
+        return getUser(user) != null;
     }
 
     private boolean checkPseudo(String pseudo){

@@ -26,8 +26,7 @@ public class UserService {
 
     public User createUser(User user){
 
-        user=userManager.createUser(user);
-
-        return user;
+         return userManager.createUser(user);
+        
     }
 }
