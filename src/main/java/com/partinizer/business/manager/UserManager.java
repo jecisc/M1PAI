@@ -93,7 +93,7 @@ public class UserManager {
 
     private boolean checkPseudo(String pseudo){
 
-        return pseudo!=null && !pseudo.equals("") && pseudo.length()>4 && pseudo.length()<20;
+        return pseudo!=null && pseudo.length()>4 && pseudo.length()<20;
     }
 
     private boolean checkPassword(String password){
