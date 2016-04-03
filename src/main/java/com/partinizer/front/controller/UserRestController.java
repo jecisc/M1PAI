@@ -30,13 +30,13 @@ public class UserRestController {
     public ResponseEntity<User> createUser(@RequestBody User user){
 
         if(user==null){
-            return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(user,HttpStatus.BAD_REQUEST);
         }
 
         user= userService.createUser(user);
 
 
-            return new ResponseEntity<User>(user,HttpStatus.CREATED);
+            return new ResponseEntity<>(user,HttpStatus.CREATED);
 
     }
 
