@@ -2,17 +2,16 @@ package com.partinizer.business.manager;
 
 import com.partinizer.data.entity.User;
 import com.partinizer.data.repository.UserRepository;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.Properties;
 
 /**
@@ -33,7 +32,7 @@ public class UserManager {
     public User createUser(User user){
 
         if(checkPseudo(user.getPseudo()) && checkPassword(user.getPassword())){
-            //TODO send a mail
+            this.sendAcceptionMailTo(user);
             return userRepository.save(user);
         }
 
@@ -104,28 +103,52 @@ public class UserManager {
         return password!=null && !password.equals("") && password.matches(regexPassword);
     }
 
-    public void sendAcceptionMail(){
-        //TODO WIP
+    public void sendAcceptionMailTo(User aUser){
+        //TODO remove hard code
 
-        Session session = Session.getDefaultInstance(new Properties(), null);
+        Integer port = 465;
+        String host = "smtp.gmail.com";
+        String from = "Partinizer_authentification_service";
+        Boolean auth = true;
+        String username = "m1paiemail@gmail.com";
+        String password = "cotelette";
 
-        String messageContent = "TODO"; //TODO
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", port);
+        props.put("mail.smtp.ssl.enable", true);
 
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("admin@test.fr", "Admin"));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress("cyril.ferlicot@gmail.com", "Test")); //TODO remove hard code
-            message.setSubject("Your Partinizer account has been activated");
-            message.setText(messageContent);
-            Transport.send(message);
+        Authenticator authenticator = null;
 
-        } catch (AddressException e) {
-            // TODO
-        } catch (MessagingException e) {
-            // TODO
-        } catch (UnsupportedEncodingException e) {
-            // TODO
+        if (auth) {
+            props.put("mail.smtp.auth", true);
+            authenticator = new Authenticator() {
+
+                protected PasswordAuthentication pa = new PasswordAuthentication(username, password);
+
+                @Override
+                public PasswordAuthentication getPasswordAuthentication() {
+                    return pa;
+                }
+
+            };
         }
+
+        Session session = Session.getInstance(props, authenticator);
+
+        MimeMessage message = new MimeMessage(session);
+        try {
+            message.setFrom(new InternetAddress(from));
+            InternetAddress[] address = {new InternetAddress(aUser.getMail())};
+            message.setRecipients(Message.RecipientType.TO, address);
+            message.setSubject("Inscription");
+            message.setSentDate(new Date());
+            message.setText("Bonjour, vous venez de vous inscrire."); //TODO generate a link with the hash of the user mail
+            Transport.send(message);
+        } catch (MessagingException ex) {
+            ex.printStackTrace();
+        }
+
     }
 
 }
