@@ -4,7 +4,6 @@ import com.partinizer.data.entity.User;
 import com.partinizer.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
 
 /**
@@ -84,14 +83,12 @@ public class UserManager {
         return null;
     }
 
-    public User getUserByPseudo(User user){
+    /**
+     * Set the active status to true
+     * @param user
+     */
+    public void setActiveStatusTrue(User user){
 
-        if(user!=null && user.getPseudo()!=null && !user.getPseudo().equals("")) {
-            user=userRepository.findByPseudo(user.getPseudo());
-            return user;
-        }
-
-        return null;
     }
 
     /**
