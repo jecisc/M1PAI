@@ -29,4 +29,10 @@ public class UserService {
          return userManager.createUser(user);
         
     }
+
+    public User getUserByMailOrPseudo(User user){
+        user=userManager.getUserByMailOrPseudo(user);
+
+        return user;
+    }
 }
