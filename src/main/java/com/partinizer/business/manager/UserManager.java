@@ -5,6 +5,7 @@ import com.partinizer.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by vincent on 10/03/16.
@@ -90,6 +91,17 @@ public class UserManager {
     public void setActiveStatusTrue(User user){
 
     }
+
+    public List<User> findByPseudo(String pseudo){
+
+        List<User> userList=userRepository.findByPseudoStartingWith(pseudo);
+
+        return userList;
+    }
+
+
+
+
 
     /**
      * Delete a User by his Id

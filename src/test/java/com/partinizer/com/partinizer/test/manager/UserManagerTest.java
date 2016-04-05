@@ -15,6 +15,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -26,7 +27,7 @@ import java.util.Date;
 public class UserManagerTest {
 
     @Autowired
-    private UserManager userManager;
+  private UserManager userManager;
 
     private User user;
 
@@ -41,10 +42,9 @@ public class UserManagerTest {
         user.setRegistDate(new Date(System.currentTimeMillis()));
         user.setAvatar("");
         user.setActive(false);
-
-
-
     }
+
+
     @Test
     public void getUserById(){
 
@@ -125,5 +125,13 @@ public class UserManagerTest {
         user.setPassword("fkjd5sfldskmM");
         user=userManager.createUser(user);
         assertNull(user);
+    }
+
+    @Test
+    public void findUserByPseudo(){
+        user.setPseudo("teo");
+        List<User> userList=userManager.findByPseudo("teo");
+        assertNotNull(userList);
+
     }
 }

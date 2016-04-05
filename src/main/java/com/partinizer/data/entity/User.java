@@ -46,6 +46,11 @@ public class User {
     @Column(name="avatar")
     private String avatar;
 
+    @ElementCollection
+    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER,mappedBy="AREFRIEND")
+    private List<User> friends;
+
+
 
     public long getId() {
         return id;
