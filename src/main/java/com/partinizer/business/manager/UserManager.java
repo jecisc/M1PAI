@@ -45,7 +45,11 @@ public class UserManager {
 
             if (user_exist == null) {
                 user.setRegistDate(new Date(System.currentTimeMillis()));
-                this.sendAcceptionMailTo(user);
+                try {
+                    this.sendAcceptionMailTo(user);
+                } catch (MessagingException e) {
+                    e.printStackTrace(); //TODO maybe a retry?
+                }
                 return userRepository.save(user);
 
             }
@@ -155,13 +159,12 @@ public class UserManager {
         return !active;
     }
 
-    public void sendAcceptionMailTo(User aUser) {
+    public void sendAcceptionMailTo(User aUser) throws MessagingException {
         //TODO remove hard code
 
         Integer port = 465;
         String host = "smtp.gmail.com";
         String from = "Partinizer_authentification_service";
-        Boolean auth = true;
         String username = "m1paiemail@gmail.com";
         String password = "cotelette";
 
@@ -169,37 +172,35 @@ public class UserManager {
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.port", port);
         props.put("mail.smtp.ssl.enable", true);
+        props.put("mail.smtp.auth", true);
 
-        Authenticator authenticator = null;
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication pa = new PasswordAuthentication(username, password);
 
-        if (auth) {
-            props.put("mail.smtp.auth", true);
-            authenticator = new Authenticator() {
-
-                protected PasswordAuthentication pa = new PasswordAuthentication(username, password);
-
-                @Override
-                public PasswordAuthentication getPasswordAuthentication() {
-                    return pa;
-                }
-
-            };
-        }
-
-        Session session = Session.getInstance(props, authenticator);
+            @Override
+            public PasswordAuthentication getPasswordAuthentication() {
+                return pa;
+            }
+        });
 
         MimeMessage message = new MimeMessage(session);
-        try {
-            message.setFrom(new InternetAddress(from));
-            InternetAddress[] address = {new InternetAddress(aUser.getMail())};
-            message.setRecipients(Message.RecipientType.TO, address);
-            message.setSubject("Inscription");
-            message.setSentDate(new Date());
-            message.setText("Bonjour, vous venez de vous inscrire."); //TODO generate a link with the hash of the user mail
-            Transport.send(message);
-        } catch (MessagingException ex) {
-            ex.printStackTrace();
-        }
+        message.setFrom(new InternetAddress(from));
+        InternetAddress[] address = {new InternetAddress(aUser.getMail())};
+        message.setRecipients(Message.RecipientType.TO, address);
+        message.setSubject("Partinizer - Inscription");
+        message.setSentDate(new Date());
+        message.setText("Bonjour,\n" +
+                "\n" +
+                "Vous recevez cet email car quelqu'un, avec un petit peu de chance vous, s'est inscrit à Partinizer.\n"+
+                "S'il s'agit de vous, cliquez juste sur le lien ci dessous ou copiez/collez le dans votre navigateur.\n" +
+                "\n" +
+                "https://localhost:8080/validation/" + aUser.getMail().toString() + "/" + aUser.getMail().hashCode() + "\n" +
+                "\n" +
+                "Si vous n'avez pas demandé cette inscription, veuillez ignorer cet email..\n" +
+                "Merci,\n" +
+                "Partinizer ");
+        Transport.send(message);
+
 
     }
 
