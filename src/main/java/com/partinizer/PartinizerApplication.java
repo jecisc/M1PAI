@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = {
         org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class
+
 })
 public class PartinizerApplication {
 

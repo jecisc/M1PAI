@@ -37,7 +37,7 @@ public class UserRestController {
             return new ResponseEntity<String>(HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(user.getPassword().equals(user_.getPassword()))
+        if(user.getPassword().equals(user_.getPassword()) && user.isActive())
            return new ResponseEntity<String>(HttpStatus.ACCEPTED);
 
         //Mot de passe non correcte
@@ -66,29 +66,29 @@ public class UserRestController {
 
     }
 
-    /*@RequestMapping(value="/{user}", method= RequestMethod.GET)
+    @RequestMapping(value="/friends/{idUser}", method= RequestMethod.GET)
     public ResponseEntity<User> userTest(
-            @PathVariable("user") String user_){
+            @PathVariable("idUser") long idUser){
 
+            User user=userService.getAllFriends(idUser);
 
+            if(user!=null)
+                return new  ResponseEntity<User>(user,HttpStatus.OK);
 
-       User user= new User();
-        user.setName("teo");
-        user.setMail("teo.brisse@gmail.com");
-        user.setPassword("password");
-        user.setRegistDate(new Date(System.currentTimeMillis()));
-        user.setActive(true);
-        user.setPseudo("teobrisse");
-        user.setAvatar("");
+            return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
+    }
 
+    @RequestMapping(value="/{pseudo}", method= RequestMethod.GET)
+    public ResponseEntity<User> userTest(
+            @PathVariable("pseudo") String pseudo){
+        User user = new User();
+        user.setPseudo(pseudo);
+        user=userService.getUserByMailOrPseudo(user);
 
-
-
-
-        return new ResponseEntity<User>(
+        return new ResponseEntity<User>(user
                 , HttpStatus.OK);
 
-    }*/
+    }
 
     /**
      * Méthode qui gère les exceptions qui peuvent arriver dans les différentes couches

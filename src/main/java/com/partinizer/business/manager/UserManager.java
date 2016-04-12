@@ -2,8 +2,11 @@ package com.partinizer.business.manager;
 
 import com.partinizer.data.entity.User;
 import com.partinizer.data.repository.UserRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +14,7 @@ import java.util.List;
  * Created by vincent on 10/03/16.
  */
 @Component
+@Transactional
 public class UserManager {
 
     private String regexPassword="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,40}$";
@@ -78,10 +82,21 @@ public class UserManager {
         if(user!=null && (user.getMail()!=null && !user.getMail().equals(""))||
                 (user.getPseudo()!=null && !user.getPseudo().equals("")) ) {
             user = userRepository.findByMailOrPseudo(user.getMail(),user.getPseudo());
+
             return user;
         }
 
         return null;
+    }
+
+    public User getAllFriends(long id){
+
+        User user= userRepository.getFriendsById(id);
+
+
+        return user;
+
+
     }
 
     /**

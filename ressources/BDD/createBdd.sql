@@ -10,6 +10,7 @@ CREATE DATABASE "M1PAI"
   CONNECTION LIMIT = -1;
 */
 
+
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = OFF;
@@ -104,13 +105,18 @@ ALTER SEQUENCE event_id_seq OWNED BY EVENT.idEvent;
 -- areFriend
 
 CREATE TABLE AREFRIEND (
-  firend1      INTEGER REFERENCES APPLIUSER (idUser),
+  friend1      INTEGER REFERENCES APPLIUSER (idUser),
   friend2      INTEGER REFERENCES APPLIUSER (idUser),
-  accepted     BOOLEAN NOT NULL,
-  friendAsking INTEGER REFERENCES APPLIUSER (idUser),
-  PRIMARY KEY (firend1, friend2)
+  PRIMARY KEY (friend1, friend2)
 );
 
+
+CREATE TABLE ASKFRIEND (
+  asker INTEGER REFERENCES APPLIUSER(idUser),
+  friend INTEGER REFERENCES APPLIUSER(idUser),
+  accepted BOOLEAN NOT NULL,
+  PRIMARY KEY (asker, friend)
+);
 -- participate
 
 CREATE TABLE PARTICIPATE (
@@ -136,7 +142,6 @@ CREATE TABLE PROVIDED (
   provided  INTEGER NOT NULL,
   PRIMARY KEY (appliuser, ressource)
 );
-
 
 
 

@@ -4,6 +4,7 @@ import com.partinizer.PartinizerApplication;
 import com.partinizer.business.manager.UserManager;
 import com.partinizer.data.entity.User;
 import org.apache.commons.lang.RandomStringUtils;
+import org.hibernate.Hibernate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,16 +45,23 @@ public class UserManagerTest {
         user.setActive(false);
     }
 
-
-    @Test
+/*
+   @Test
     public void getUserById(){
 
-        user.setId(11);
+        user.setId(1);
         user=userManager.getUser(user);
+        assertNotNull(user);
+    }*/
+
+    @Test
+    public void getUserFriends(){
+        user.setId(1);
+        user=userManager.getAllFriends(user.getId());
         assertNotNull(user);
     }
 
-    @Test
+  /* @Test
     public void getUserByMail(){
         user.setMail("superman@gmail.com");
         user=userManager.getUserByMailOrPseudo(user);
@@ -133,5 +141,5 @@ public class UserManagerTest {
         List<User> userList=userManager.findByPseudo("teo");
         assertNotNull(userList);
 
-    }
+    }*/
 }
