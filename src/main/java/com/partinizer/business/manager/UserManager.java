@@ -92,13 +92,9 @@ public class UserManager {
         return null;
     }
 
-    /**
-     * Set the active status to true
-     *
-     * @param user
-     */
-    public void setActiveStatusTrue(User user) {
-        //TODO
+    public Boolean validateUserSubscription(User user) {
+        user.setActive(true);
+        return (this.userRepository.save(user)).isActive();
     }
 
 
@@ -164,7 +160,7 @@ public class UserManager {
 
         Integer port = 465;
         String host = "smtp.gmail.com";
-        String from = "Partinizer_authentification_service";
+        String from = "m1paiemail@gmail.com";
         String username = "m1paiemail@gmail.com";
         String password = "cotelette";
 
@@ -194,7 +190,7 @@ public class UserManager {
                 "Vous recevez cet email car quelqu'un, avec un petit peu de chance vous, s'est inscrit à Partinizer.\n"+
                 "S'il s'agit de vous, cliquez juste sur le lien ci dessous ou copiez/collez le dans votre navigateur.\n" +
                 "\n" +
-                "https://localhost:8080/validation/" + aUser.getMail().toString() + "/" + aUser.getMail().hashCode() + "\n" +
+                "https://localhost:8080/user/validation?" + aUser.getMail().toString() + "&" + aUser.getMail().hashCode() + "\n" +
                 "\n" +
                 "Si vous n'avez pas demandé cette inscription, veuillez ignorer cet email..\n" +
                 "Merci,\n" +
@@ -204,4 +200,7 @@ public class UserManager {
 
     }
 
+    public User getUserByMail(String mail) {
+        return this.userRepository.findByMail(mail);
+    }
 }

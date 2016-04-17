@@ -31,8 +31,16 @@ public class UserService {
     }
 
     public User getUserByMailOrPseudo(User user){
-        user=userManager.getUserByMailOrPseudo(user);
 
-        return user;
+        return userManager.getUserByMailOrPseudo(user);
+
+    }
+
+    public User getUserByMail(String mail){
+        return userManager.getUserByMail(mail);
+    }
+
+    public Boolean validateUserSubscription(User user){
+        return this.userManager.validateUserSubscription(user);
     }
 }
