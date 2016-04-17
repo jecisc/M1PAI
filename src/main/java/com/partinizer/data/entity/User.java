@@ -1,5 +1,6 @@
 package com.partinizer.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
 
@@ -37,6 +38,7 @@ public class User {
     private String firstName;
 
     @Column(name="passwd")
+    @JsonIgnore
     private String password;
 
     @Column(name="email")

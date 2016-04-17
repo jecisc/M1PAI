@@ -78,6 +78,7 @@ public class UserRestController {
             return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
     }
 
+    @CrossOrigin
     @RequestMapping(value="/{pseudo}", method= RequestMethod.GET)
     public ResponseEntity<User> userTest(
             @PathVariable("pseudo") String pseudo){
