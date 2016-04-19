@@ -53,7 +53,7 @@ public class UserRestController {
     public ResponseEntity<User> createUser(@RequestBody User user){
 
         if(user==null){
-            return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(user,HttpStatus.BAD_REQUEST);
         }
 
         user= userService.createUser(user);
@@ -62,8 +62,21 @@ public class UserRestController {
             return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
         }
 
-            return new ResponseEntity<User>(user,HttpStatus.CREATED);
+            return new ResponseEntity<>(user,HttpStatus.CREATED);
 
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/validation", method = RequestMethod.GET)
+    public ResponseEntity<Boolean> validateUser(@RequestParam(value = "mail", defaultValue = "") String mail, @RequestParam(value = "cle", defaultValue = "0") String hash) {
+
+        User user = this.userService.getUserByMail(mail);
+
+        if (!(user == null) && (mail.hashCode() == Integer.valueOf(hash)) && this.userService.validateUserSubscription(user)) {
+            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
+        }
+
+        return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
 
     /*@RequestMapping(value="/{user}", method= RequestMethod.GET)
