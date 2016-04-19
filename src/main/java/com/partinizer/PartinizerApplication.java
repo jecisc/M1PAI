@@ -4,6 +4,7 @@ import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.EmbeddedServletContainerAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -20,10 +21,9 @@ import javax.naming.NamingException;
  */
 @ComponentScan
 @SpringBootApplication
-@EnableAutoConfiguration(/*exclude = {
-        org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class
+@EnableAutoConfiguration(/*exclude = { SecurityAutoConfiguration.class }*/
 
-}*/)
+)
 public class PartinizerApplication {
 
     public static void main(String[] args) {
@@ -35,9 +35,9 @@ public class PartinizerApplication {
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName("org.postgresql.Driver");
-        driverManagerDataSource.setUrl("jdbc:postgresql://localhost/vincent");
-        driverManagerDataSource.setUsername("vincent");
-        driverManagerDataSource.setPassword("vincent");
+        driverManagerDataSource.setUrl("jdbc:postgresql://localhost/M1PAI");
+        driverManagerDataSource.setUsername("postgres");
+        driverManagerDataSource.setPassword("admin");
         return driverManagerDataSource;
     }
 

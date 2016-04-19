@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 
 /**
  * Created by vincent on 10/03/16.
@@ -23,6 +25,11 @@ public class UserRestController {
         this.userService=userService;
     }
 
+    /*@RequestMapping(value = "", method=RequestMethod.GET)
+    public Principal login(Principal user){
+
+        return user;
+    }*/
     @CrossOrigin
     @RequestMapping(value = "/login", method=RequestMethod.POST)
     public ResponseEntity<String> login(@RequestBody User user){
@@ -48,7 +55,7 @@ public class UserRestController {
 
 
     /**Méthode de création d'un utilisateur basé sur une requête HTTP POST**/
-    @CrossOrigin
+    //@CrossOrigin
     @RequestMapping(value = "/create", method=RequestMethod.POST)
     public ResponseEntity<User> createUser(@RequestBody User user){
 
@@ -80,7 +87,7 @@ public class UserRestController {
 
     @CrossOrigin
     @RequestMapping(value="/{pseudo}", method= RequestMethod.GET)
-    public ResponseEntity<User> userTest(
+    public ResponseEntity<User> userTest(Principal principal,
             @PathVariable("pseudo") String pseudo){
         User user = new User();
         user.setPseudo(pseudo);

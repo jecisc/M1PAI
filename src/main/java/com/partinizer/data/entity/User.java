@@ -38,7 +38,7 @@ public class User {
     private String firstName;
 
     @Column(name="passwd")
-    @JsonIgnore
+    //@JsonIgnore
     private String password;
 
     @Column(name="email")
