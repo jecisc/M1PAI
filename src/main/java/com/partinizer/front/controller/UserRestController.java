@@ -5,6 +5,7 @@ import com.partinizer.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -55,7 +56,8 @@ public class UserRestController {
 
 
     /**Méthode de création d'un utilisateur basé sur une requête HTTP POST**/
-    //@CrossOrigin
+    @CrossOrigin
+    @PreAuthorize("true")
     @RequestMapping(value = "/create", method=RequestMethod.POST)
     public ResponseEntity<User> createUser(@RequestBody User user){
 

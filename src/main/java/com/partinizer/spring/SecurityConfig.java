@@ -2,6 +2,7 @@ package com.partinizer.spring;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,10 +21,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .anyRequest().permitAll();
-                /*.and()
-                .httpBasic();*/
-        http.csrf().disable();
+                    .antMatchers(HttpMethod.OPTIONS,"/user/**").permitAll()
+                    .antMatchers(HttpMethod.POST,"/user/create").permitAll().and()
+                .authorizeRequests()
+                .anyRequest().authenticated().and()
+                .httpBasic();
+
+       http.csrf().disable();
     }
 
     @Autowired
