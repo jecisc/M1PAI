@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by vincent on 10/03/16.
@@ -11,6 +12,8 @@ import java.util.Date;
 
 @Entity
 @Table(name="appliuser")
+@NamedEntityGraph(name = "User.detail",
+        attributeNodes = @NamedAttributeNode(value = "friends"))
 public class User {
 
     private static final long serialVersionUID = 1L;
@@ -22,7 +25,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UserIdGenerator")
     private long id;
 
-    @Column(name="name")
+    @Column(name="lastname")
     private String name;
 
     @Column(name="firstname")
@@ -46,8 +49,9 @@ public class User {
     @Column(name="avatar")
     private String avatar;
 
-    @ElementCollection
-    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER,mappedBy="AREFRIEND")
+    @OneToMany(fetch=FetchType.LAZY)
+    @JoinTable(name="arefriend",joinColumns = @JoinColumn(name="friend1"),
+            inverseJoinColumns = @JoinColumn(name = "friend2"))
     private List<User> friends;
 
 
