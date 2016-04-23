@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 
 /**
  * Created by vincent on 10/03/16.
@@ -78,30 +80,30 @@ public class UserRestController {
 
         return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
+    @CrossOrigin
+    @RequestMapping(value="/{pseudo}", method= RequestMethod.GET)
+    public ResponseEntity<User> userTest(Principal principal,
+                                         @PathVariable("pseudo") String pseudo){
+        User user = new User();
+        user.setPseudo(pseudo);
+        user=userService.getUserByMailOrPseudo(user);
 
-    /*@RequestMapping(value="/{user}", method= RequestMethod.GET)
-    public ResponseEntity<User> userTest(
-            @PathVariable("user") String user_){
-
-
-
-       User user= new User();
-        user.setName("teo");
-        user.setMail("teo.brisse@gmail.com");
-        user.setPassword("password");
-        user.setRegistDate(new Date(System.currentTimeMillis()));
-        user.setActive(true);
-        user.setPseudo("teobrisse");
-        user.setAvatar("");
-
-
-
-
-
-        return new ResponseEntity<User>(
+        return new ResponseEntity<User>(user
                 , HttpStatus.OK);
 
-    }*/
+    }
+
+    @RequestMapping(value="/friends/{idUser}", method= RequestMethod.GET)
+    public ResponseEntity<User> userTest(
+            @PathVariable("idUser") long idUser){
+
+        User user=userService.getAllFriends(idUser);
+
+        if(user!=null)
+            return new  ResponseEntity<User>(user,HttpStatus.OK);
+
+        return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
+    }
 
     /**
      * Méthode qui gère les exceptions qui peuvent arriver dans les différentes couches
