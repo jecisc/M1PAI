@@ -5,6 +5,7 @@ import com.partinizer.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -74,6 +75,16 @@ public class UserManager {
         }
 
         return null;
+    }
+
+    public User getAllFriends(long id){
+
+        User user= userRepository.getFriendsById(id);
+
+
+        return user;
+
+
     }
 
     /**

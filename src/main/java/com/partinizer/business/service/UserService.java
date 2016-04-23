@@ -36,6 +36,11 @@ public class UserService {
 
     }
 
+    public User getAllFriends(long id){
+        User user= userManager.getAllFriends(id);
+        return user;
+    }
+
     public User getUserByMail(String mail){
         return userManager.getUserByMail(mail);
     }
