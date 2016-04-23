@@ -5,7 +5,6 @@ import com.partinizer.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -24,6 +23,20 @@ public class UserRestController {
     @Autowired
     public UserRestController(UserService userService){
         this.userService=userService;
+    }
+
+
+    @CrossOrigin
+    @RequestMapping(value="/{pseudo}", method= RequestMethod.GET)
+    public ResponseEntity<User> userTest(Principal principal,
+                                         @PathVariable("pseudo") String pseudo){
+        User user = new User();
+        user.setPseudo(pseudo);
+        user=userService.getUserByMailOrPseudo(user);
+
+        return new ResponseEntity<User>(user
+                , HttpStatus.OK);
+
     }
 
     /*@RequestMapping(value = "", method=RequestMethod.GET)
@@ -57,7 +70,7 @@ public class UserRestController {
 
     /**Méthode de création d'un utilisateur basé sur une requête HTTP POST**/
     @CrossOrigin
-    @PreAuthorize("true")
+    //@PreAuthorize("true")
     @RequestMapping(value = "/create", method=RequestMethod.POST)
     public ResponseEntity<User> createUser(@RequestBody User user){
 
@@ -87,18 +100,7 @@ public class UserRestController {
             return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
     }
 
-    @CrossOrigin
-    @RequestMapping(value="/{pseudo}", method= RequestMethod.GET)
-    public ResponseEntity<User> userTest(Principal principal,
-            @PathVariable("pseudo") String pseudo){
-        User user = new User();
-        user.setPseudo(pseudo);
-        user=userService.getUserByMailOrPseudo(user);
 
-        return new ResponseEntity<User>(user
-                , HttpStatus.OK);
-
-    }
 
     /**
      * Méthode qui gère les exceptions qui peuvent arriver dans les différentes couches
