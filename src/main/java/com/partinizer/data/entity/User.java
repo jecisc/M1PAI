@@ -1,5 +1,6 @@
 package com.partinizer.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
@@ -31,6 +32,7 @@ public class User {
     @Column(name="firstname")
     private String firstName;
 
+    @JsonIgnore
     @Column(name="passwd")
     private String password;
 
@@ -128,5 +130,11 @@ public class User {
         this.firstName = firstName;
     }
 
+    public List<User> getFriends() {
+        return friends;
+    }
 
+    public void setFriends(List<User> friends) {
+        this.friends = friends;
+    }
 }

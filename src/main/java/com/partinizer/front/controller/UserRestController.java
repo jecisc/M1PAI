@@ -5,8 +5,12 @@ import com.partinizer.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 
@@ -80,12 +84,14 @@ public class UserRestController {
 
         return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
     }
+
     @CrossOrigin
-    @RequestMapping(value="/{pseudo}", method= RequestMethod.GET)
-    public ResponseEntity<User> userTest(Principal principal,
-                                         @PathVariable("pseudo") String pseudo){
+    @RequestMapping(value="/get", method= RequestMethod.GET)
+    public ResponseEntity<User> getUser(Authentication authentication){
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = new User();
-        user.setPseudo(pseudo);
+        user.setPseudo(userDetails.getUsername());
         user=userService.getUserByMailOrPseudo(user);
 
         return new ResponseEntity<User>(user
@@ -93,11 +99,15 @@ public class UserRestController {
 
     }
 
-    @RequestMapping(value="/friends/{idUser}", method= RequestMethod.GET)
-    public ResponseEntity<User> userTest(
-            @PathVariable("idUser") long idUser){
+    @RequestMapping(value="/friends", method= RequestMethod.GET)
+    public ResponseEntity<User> getFriends(Authentication authentication){
 
-        User user=userService.getAllFriends(idUser);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = new User();
+        user.setPseudo(userDetails.getUsername());
+        user=userService.getUserByMailOrPseudo(user);
+
+        user=userService.getAllFriends(user.getId());
 
         if(user!=null)
             return new  ResponseEntity<User>(user,HttpStatus.OK);
@@ -112,7 +122,7 @@ public class UserRestController {
      */
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    @ResponseStatus(value=HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value=HttpStatus.EXPECTATION_FAILED)
     public String handleException(){
 
         return "Error";
