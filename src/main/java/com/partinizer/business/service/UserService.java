@@ -41,6 +41,10 @@ public class UserService {
         return user;
     }
 
+    public boolean deleteFriend(User user, long idFriend){
+        return userManager.deleteFriend(user,idFriend);
+    }
+
     public User getUserByMail(String mail){
         return userManager.getUserByMail(mail);
     }

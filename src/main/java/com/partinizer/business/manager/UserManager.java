@@ -134,6 +134,30 @@ public class UserManager {
         return null;
     }
 
+    /**
+     * Delete a "friend link" between two Users
+     * @param user
+     * Current user
+     * @param idFriend
+     * User friend id
+     * @return
+     *      true if delete works, false if not
+     */
+    public boolean deleteFriend(User user,long idFriend){
+
+        if(validUser(user)){
+            //Check if friend user exist
+            User friend=userRepository.getOne(idFriend);
+            if(friend!=null){
+                userRepository.deleteFriend(user.getId(),idFriend);
+                return true;
+            }
+        }
+
+
+        return false;
+    }
+
 
     private boolean validUser(User user) {
 

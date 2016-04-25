@@ -134,4 +134,11 @@ public class UserManagerTest {
         assertNotNull(userList);
 
     }
+
+    @Test
+    public void deleteFriendById(){
+        user.setPseudo("vmargerin");
+        user=userManager.getUserByMailOrPseudo(user);
+        userManager.deleteFriend(user,5);
+    }
 }

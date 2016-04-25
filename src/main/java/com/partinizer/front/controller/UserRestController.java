@@ -3,6 +3,7 @@ package com.partinizer.front.controller;
 import com.partinizer.business.service.UserService;
 import com.partinizer.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -110,6 +111,20 @@ public class UserRestController {
         user=userService.getAllFriends(user.getId());
 
         if(user!=null)
+            return new  ResponseEntity<User>(user,HttpStatus.OK);
+
+        return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
+    }
+
+
+    @RequestMapping(value="/friends/delete/{idFriend}",method=RequestMethod.DELETE)
+    public ResponseEntity<User> deleteFriend(Authentication authentication,@PathVariable("idFriend") long idFriend){
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = new User();
+        user.setPseudo(userDetails.getUsername());
+        user=userService.getUserByMailOrPseudo(user);
+
+        if(userService.deleteFriend(user,idFriend))
             return new  ResponseEntity<User>(user,HttpStatus.OK);
 
         return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
