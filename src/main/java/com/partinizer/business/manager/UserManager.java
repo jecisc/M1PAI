@@ -209,7 +209,7 @@ public class UserManager {
                 "Vous recevez cet email car quelqu'un, avec un petit peu de chance vous, s'est inscrit à Partinizer.\n"+
                 "S'il s'agit de vous, cliquez juste sur le lien ci dessous ou copiez/collez le dans votre navigateur.\n" +
                 "\n" +
-                "https://localhost:8080/user/validation?" + aUser.getMail().toString() + "&" + aUser.getMail().hashCode() + "\n" +
+                "http://localhost:8080/user/validation?mail=" + aUser.getMail().toString() + "&cle=" + aUser.getMail().hashCode() + "\n" +
                 "\n" +
                 "Si vous n'avez pas demandé cette inscription, veuillez ignorer cet email..\n" +
                 "Merci,\n" +

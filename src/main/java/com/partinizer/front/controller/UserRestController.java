@@ -74,15 +74,15 @@ public class UserRestController {
 
     @CrossOrigin
     @RequestMapping(value = "/validation", method = RequestMethod.GET)
-    public ResponseEntity<Boolean> validateUser(@RequestParam(value = "mail", defaultValue = "") String mail, @RequestParam(value = "cle", defaultValue = "0") String hash) {
+    public ResponseEntity<String> validateUser(@RequestParam(value = "mail", defaultValue = "") String mail, @RequestParam(value = "cle", defaultValue = "0") String hash) {
 
         User user = this.userService.getUserByMail(mail);
 
         if (!(user == null) && (mail.hashCode() == Integer.valueOf(hash)) && this.userService.validateUserSubscription(user)) {
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>("Votre validation a bien été effectuée.", HttpStatus.ACCEPTED);
         }
 
-        return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Votre lien n'est pas bon :(", HttpStatus.BAD_REQUEST);
     }
 
     @CrossOrigin
