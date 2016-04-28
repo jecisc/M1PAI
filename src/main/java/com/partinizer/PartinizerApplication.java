@@ -27,9 +27,9 @@ public class PartinizerApplication {
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName("org.postgresql.Driver");
-        driverManagerDataSource.setUrl("jdbc:postgresql://localhost/M1PAI");
-        driverManagerDataSource.setUsername("postgres");
-        driverManagerDataSource.setPassword("admin");
+        driverManagerDataSource.setUrl("jdbc:postgresql://postgresql-m1pai.alwaysdata.net/m1pai_pai");
+        driverManagerDataSource.setUsername("m1pai");
+        driverManagerDataSource.setPassword("m1pailille1");
         return driverManagerDataSource;
     }
 }
