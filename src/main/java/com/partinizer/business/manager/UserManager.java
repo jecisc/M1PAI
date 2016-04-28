@@ -154,7 +154,7 @@ public class UserManager {
 
     private boolean checkPassword(String password) {
 
-        return password != null && !password.equals("") && password.matches(regexPassword);
+        return password != null && password.matches(regexPassword);
     }
 
     private boolean checkMail(String mail) {
