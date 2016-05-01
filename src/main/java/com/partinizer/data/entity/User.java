@@ -13,8 +13,8 @@ import java.util.List;
 
 @Entity
 @Table(name="appliuser")
-@NamedEntityGraph(name = "User.detail",
-        attributeNodes = @NamedAttributeNode(value = "friends"))
+@NamedEntityGraph(name = "User.friends",
+        attributeNodes =@NamedAttributeNode( "friends"))
 public class User {
 
     private static final long serialVersionUID = 1L;
@@ -32,7 +32,7 @@ public class User {
     @Column(name="firstname")
     private String firstName;
 
-    @JsonIgnore
+
     @Column(name="passwd")
     private String password;
 
@@ -56,7 +56,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "friend2"))
     private List<User> friends;
 
-
+    @OneToMany(fetch=FetchType.EAGER)
+    @JoinTable(name="askfriend",joinColumns = @JoinColumn(name="friend"),
+            inverseJoinColumns = @JoinColumn(name = "asker"))
+    private List<User> friendRequest;
 
     public long getId() {
         return id;
@@ -136,5 +139,13 @@ public class User {
 
     public void setFriends(List<User> friends) {
         this.friends = friends;
+    }
+
+    public List<User> getFriendRequest() {
+        return friendRequest;
+    }
+
+    public void setFriendRequest(List<User> friendRequest) {
+        this.friendRequest = friendRequest;
     }
 }

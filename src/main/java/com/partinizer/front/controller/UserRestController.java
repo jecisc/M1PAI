@@ -51,6 +51,29 @@ public class UserRestController {
         return new ResponseEntity<String>(HttpStatus.NOT_ACCEPTABLE);
     }
 
+    /**
+     * Update user information (lastname,firstname and avatar)
+     * @param authentication
+     * @param userUpdate
+     * @return
+     *      The user updated
+     */
+    @RequestMapping(value="/update", method=RequestMethod.POST)
+    public ResponseEntity<User> update(Authentication authentication,@RequestBody User userUpdate){
+
+        User user=getUserFromAuthentication(authentication);
+
+        if(userUpdate!=null && userUpdate.getId()!=0 && userUpdate.getId()==user.getId()){
+            userUpdate=userService.updateUser(userUpdate,user);
+            if(userUpdate!=null){
+                return new ResponseEntity<User>(userUpdate,HttpStatus.OK);
+            }
+                return new ResponseEntity<User>(userUpdate,HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return new ResponseEntity<User>(userUpdate,HttpStatus.BAD_REQUEST);
+    }
+
 
 
 
@@ -90,10 +113,7 @@ public class UserRestController {
     @RequestMapping(value="/get", method= RequestMethod.GET)
     public ResponseEntity<User> getUser(Authentication authentication){
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = new User();
-        user.setPseudo(userDetails.getUsername());
-        user=userService.getUserByMailOrPseudo(user);
+        User user=getUserFromAuthentication(authentication);
 
         return new ResponseEntity<User>(user
                 , HttpStatus.OK);
@@ -103,10 +123,7 @@ public class UserRestController {
     @RequestMapping(value="/friends", method= RequestMethod.GET)
     public ResponseEntity<User> getFriends(Authentication authentication){
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = new User();
-        user.setPseudo(userDetails.getUsername());
-        user=userService.getUserByMailOrPseudo(user);
+        User user=getUserFromAuthentication(authentication);
 
         user=userService.getAllFriends(user.getId());
 
@@ -119,10 +136,8 @@ public class UserRestController {
 
     @RequestMapping(value="/friends/delete/{idFriend}",method=RequestMethod.DELETE)
     public ResponseEntity<User> deleteFriend(Authentication authentication,@PathVariable("idFriend") long idFriend){
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = new User();
-        user.setPseudo(userDetails.getUsername());
-        user=userService.getUserByMailOrPseudo(user);
+
+        User user=getUserFromAuthentication(authentication);
 
         if(userService.deleteFriend(user,idFriend))
             return new  ResponseEntity<User>(user,HttpStatus.OK);
@@ -142,5 +157,14 @@ public class UserRestController {
 
         return "Error";
 
+    }
+
+    private User getUserFromAuthentication(Authentication authentication){
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = new User();
+        user.setPseudo(userDetails.getUsername());
+        user=userService.getUserByMailOrPseudo(user);
+
+        return user;
     }
 }

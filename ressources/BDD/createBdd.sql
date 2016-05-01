@@ -112,7 +112,7 @@ CREATE TABLE AREFRIEND (
 CREATE TABLE ASKFRIEND (
   asker INTEGER REFERENCES APPLIUSER(idUser),
   friend INTEGER REFERENCES APPLIUSER(idUser),
-  PRIMARY KEY (asker,friend)
+  PRIMARY KEY (friend,asker)
 );
 -- participate
 

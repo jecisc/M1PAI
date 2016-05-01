@@ -28,7 +28,9 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query(value="delete from arefriend where friend1 = ?1 and friend2=?2",nativeQuery = true)
     void deleteFriend(long idUser,long idFriend);
 
-    @EntityGraph(value="User.detail", type= EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(value="User.friends", type= EntityGraph.EntityGraphType.LOAD)
     User getFriendsById(long id);
+
+
 }
 

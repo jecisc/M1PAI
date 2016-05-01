@@ -45,6 +45,10 @@ public class UserService {
         return userManager.deleteFriend(user,idFriend);
     }
 
+    public User updateUser(User userUpdate,User userAuthenticate){
+        return userManager.updateUser(userUpdate,userAuthenticate);
+    }
+
     public User getUserByMail(String mail){
         return userManager.getUserByMail(mail);
     }

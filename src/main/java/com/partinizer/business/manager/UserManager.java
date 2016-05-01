@@ -135,6 +135,30 @@ public class UserManager {
     }
 
     /**
+     * Check updated fields and send a update request to userRepository
+     * @param userUpdate
+     * @param userAuthenticate
+     *
+     * @return
+     *      The user updated
+     */
+    public User updateUser(User userUpdate,User userAuthenticate){
+        if (checkFirstName(userUpdate.getFirstName()) && checkName(userUpdate.getName())
+                && checkAvatar(userUpdate.getAvatar())){
+            if(userUpdate.getPassword()!=null && checkPassword(userUpdate.getPassword())){
+                userAuthenticate.setPassword(userUpdate.getPassword());
+            }
+            userAuthenticate.setName(userUpdate.getName());
+            userAuthenticate.setFirstName(userUpdate.getFirstName());
+            userAuthenticate.setAvatar(userUpdate.getAvatar());
+            userAuthenticate=userRepository.save(userAuthenticate);
+            return userAuthenticate;
+        }
+
+        return null;
+    }
+
+    /**
      * Delete a "friend link" between two Users
      * @param user
      * Current user
@@ -172,7 +196,7 @@ public class UserManager {
 
     private boolean checkPseudo(String pseudo) {
 
-        return pseudo != null && pseudo.length() > 4 && pseudo.length() < 20;
+        return pseudo != null && pseudo.length() > 4 && pseudo.length() <= 20;
 
     }
 
@@ -196,6 +220,10 @@ public class UserManager {
 
     private boolean checkActive(Boolean active) {
         return !active;
+    }
+
+    private boolean checkAvatar(String avatar){
+        return avatar!=null;
     }
 
     public void sendAcceptionMailTo(User aUser) throws MessagingException {

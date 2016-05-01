@@ -44,18 +44,26 @@ public class UserManagerTest {
         user.setActive(false);
     }
 
+    @Test
+    public void createUser(){
+
+        user.setPassword("Password59");
+
+        user=userManager.createUser(user);
+        assertNotNull(user);
+    }
 
     @Test
     public void getUserById(){
 
-        user.setId(11);
+        user.setId(1);
         user=userManager.getUser(user);
         assertNotNull(user);
     }
 
     @Test
     public void getUserByMail(){
-        user.setMail("superman@gmail.com");
+        user.setMail("robert.deniro@mail.com");
         user=userManager.getUserByMailOrPseudo(user);
         assertNotNull(user);
     }
@@ -69,9 +77,9 @@ public class UserManagerTest {
 
     @Test
     public void getUserByPseudo(){
-        user.setPseudo("superman");
+        user.setPseudo("cbronson");
         user=userManager.getUserByMailOrPseudo(user);
-        assertEquals("superman@gmail.com",user.getMail());
+        assertEquals("charles.bronson@mail.com",user.getMail());
     }
 
     @Test
@@ -80,17 +88,6 @@ public class UserManagerTest {
         user=userManager.getUserByMailOrPseudo(user);
         assertNull(user);
     }
-
-
-    @Test
-    public void createUser(){
-
-        user.setPassword("fkjd5sfldskmM");
-
-        user=userManager.createUser(user);
-        assertNotNull(user);
-    }
-
 
    @Test
     public void createUserWithBadPassword(){
@@ -113,7 +110,7 @@ public class UserManagerTest {
     public void createUserWithMailExist(){
 
         user.setPseudo("pseudoTest_1");
-        user.setMail("mailTest_1@gmail.com");
+        user.setMail("charles.bronson@mail.com");
         user.setPassword("fkjd5sfldskmM");
         user=userManager.createUser(user);
         assertNull(user);
@@ -129,16 +126,33 @@ public class UserManagerTest {
 
     @Test
     public void findUserByPseudo(){
-        user.setPseudo("teo");
-        List<User> userList=userManager.findByPseudo("teo");
+        user.setPseudo("bpit");
+        List<User> userList=userManager.findByPseudo("bpit");
         assertNotNull(userList);
 
     }
 
-    @Test
+   /* @Test
     public void deleteFriendById(){
         user.setPseudo("vmargerin");
         user=userManager.getUserByMailOrPseudo(user);
         userManager.deleteFriend(user,5);
+    }*/
+
+    @Test
+    public void getFriendsById(){
+        user=userManager.getAllFriends(1);
+        assertEquals(3,user.getFriends().size());
+
     }
+
+  /*  @Test
+    public void updateUser(){
+        user.setId(1);
+        user=userManager.getUser(user);
+        user.setAvatar("test");
+        user=userManager.updateUser(user);
+
+        assertEquals("test",user.getAvatar());
+    }*/
 }
