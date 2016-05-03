@@ -45,7 +45,15 @@ public class UserService {
         return userManager.getUserByMail(mail);
     }
 
+    public User getUserByPseudo(String pseudo){
+        return userManager.getUserByPseudo(pseudo);
+    }
+
     public Boolean validateUserSubscription(User user){
         return this.userManager.validateUserSubscription(user);
+    }
+
+    public boolean generateNewPasswordFor(User user) {
+        return true;
     }
 }

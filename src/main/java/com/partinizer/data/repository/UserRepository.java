@@ -15,6 +15,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     User findByMailOrPseudo(String mail,String pseudo);
     User findByMail(String mail);
+    User findByPseudo(String pseudo);
     /* @Query(value="Select u from User u where u.pseudo=:pseudo or u.mail=:mail ")
      User findByMailOrPseudo(@Param("mail")String mail,@Param("pseudo")String pseudo);*/
     // User findByPseudo(String pseudo);

@@ -21,9 +21,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers(HttpMethod.OPTIONS,"/user/**").permitAll()
-                    .antMatchers(HttpMethod.GET, "/user/validation").permitAll()
-                    .antMatchers(HttpMethod.POST,"/user/create").permitAll().and()
+                .antMatchers(HttpMethod.OPTIONS,"/user/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/user/validation").permitAll()
+                .antMatchers(HttpMethod.GET, "/user/forgotPassword").permitAll()
+                .antMatchers(HttpMethod.POST,"/user/create").permitAll().and()
                 .authorizeRequests()
                 .anyRequest().authenticated().and()
                 .httpBasic();

@@ -225,6 +225,10 @@ public class UserManager {
         return this.userRepository.findByMail(mail);
     }
 
+    public User getUserByPseudo(String pseudo) {
+        return this.userRepository.findByPseudo(pseudo);
+    }
+
     public String generateNewPassword() {
         return RandomStringUtils.random(8, 0, 0, true, true, null, new SecureRandom());
     }

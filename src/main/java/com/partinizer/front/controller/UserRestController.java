@@ -86,6 +86,19 @@ public class UserRestController {
     }
 
     @CrossOrigin
+    @RequestMapping(value = "/forgotPassword", method = RequestMethod.GET)
+    public ResponseEntity<String> forgotPassword(@RequestParam(value = "userName", defaultValue = "") String userName) {
+
+        User user = this.userService.getUserByPseudo(userName);
+
+        if (!(user == null) && this.userService.generateNewPasswordFor(user)) {
+            return new ResponseEntity<>("TODO", HttpStatus.ACCEPTED);
+        }
+
+        return new ResponseEntity<>("TODO", HttpStatus.BAD_REQUEST);
+    }
+
+    @CrossOrigin
     @RequestMapping(value="/get", method= RequestMethod.GET)
     public ResponseEntity<User> getUser(Authentication authentication){
 
