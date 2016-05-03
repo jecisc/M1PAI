@@ -2,6 +2,7 @@ package com.partinizer.business.manager;
 
 import com.partinizer.data.entity.User;
 import com.partinizer.data.repository.UserRepository;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -221,5 +223,9 @@ public class UserManager {
 
     public User getUserByMail(String mail) {
         return this.userRepository.findByMail(mail);
+    }
+
+    public String generateNewPassword() {
+        return RandomStringUtils.random(8, 0, 0, true, true, null, new SecureRandom());
     }
 }
