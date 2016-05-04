@@ -54,6 +54,6 @@ public class UserService {
     }
 
     public boolean generateNewPasswordFor(User user) {
-        return true;
+        return this.userManager.generateNewPasswordFor(user);
     }
 }

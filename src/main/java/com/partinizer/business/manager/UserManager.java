@@ -228,4 +228,26 @@ public class UserManager {
     public String generateNewPassword() {
         return RandomStringUtils.random(8, 0, 0, true, true, null, new SecureRandom());
     }
+
+    public boolean generateNewPasswordFor(User user) {
+        try {
+            String newPW = this.generateNewPassword();
+            this.sendMailTo(user, "Partinizer - Nouveau Mot de Passe", this.resetPasswordMailContentFor(user, newPW));
+            user.setPassword(newPW);
+            return (userRepository.save(user).getPassword().equals(newPW));
+        } catch (MessagingException e) {
+           return false;
+        }
+    }
+
+    private String resetPasswordMailContentFor(User user, String passwd) {
+        return "Bonjour,\n" +
+                "\n" +
+                "Vous recevez cet email car vous avez demandé un nouveau mot de passe.\n"+
+                "Voici un nouveau mot de passe temporaire: "+ passwd + ".\n" +
+                "\n" +
+                "Si vous n'avez pas demandé ce nouveau mot de passe, veuillez nous contacter.\n" +
+                "Merci,\n" +
+                "Partinizer ";
+    }
 }
