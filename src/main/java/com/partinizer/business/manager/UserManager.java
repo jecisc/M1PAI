@@ -21,10 +21,14 @@ import java.util.Properties;
 @Component
 public class UserManager {
 
-    private String regexPassword = "^(?=.*[0-9#\\$~<>\\|&-/])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,40}$";
-    private String regexMail = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    private UserRepository userRepository;
+    protected final static String REGEXPASSWORD = "^(?=.*[0-9#\\$~<>\\|&-/])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,40}$";
+    protected final static  String REGEXMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    protected static final Integer PORT = 465;
+    protected static final String HOST = "smtp.gmail.com";
+    protected static final String FROM = "m1paiemail@gmail.com";
+    protected static final String USERNAME = "m1paiemail@gmail.com";
+    protected static final String PASSWORD = "cotelette";
+    protected UserRepository userRepository;
 
     @Autowired
     public UserManager(UserRepository userRepository) {
@@ -50,7 +54,7 @@ public class UserManager {
             if (user_exist == null) {
                 user.setRegistDate(new Date(System.currentTimeMillis()));
                 try {
-                    this.sendAcceptionMailTo(user);
+                    this.sendMailTo(user, "Partinizer - Inscription", this.subscriptionMailContentFor(user));
                 } catch (MessagingException e) {
                     e.printStackTrace(); //TODO maybe a retry?
                 }
@@ -80,13 +84,7 @@ public class UserManager {
     }
 
     public User getAllFriends(long id){
-
-        User user= userRepository.getFriendsById(id);
-
-
-        return user;
-
-
+        return userRepository.getFriendsById(id);
     }
 
     /**
@@ -112,10 +110,7 @@ public class UserManager {
     }
 
     public List<User> findByPseudo(String pseudo){
-
-        List<User> userList=userRepository.findByPseudoStartingWith(pseudo);
-
-        return userList;
+        return userRepository.findByPseudoStartingWith(pseudo);
     }
 
 
@@ -156,12 +151,12 @@ public class UserManager {
 
     private boolean checkPassword(String password) {
 
-        return password != null && password.matches(regexPassword);
+        return password != null && password.matches(UserManager.REGEXPASSWORD);
     }
 
     private boolean checkMail(String mail) {
 
-        return mail != null && !mail.equals("") && mail.matches(regexMail);
+        return mail != null && !mail.equals("") && mail.matches(UserManager.REGEXMAIL);
     }
 
     private boolean checkName(String name) {
@@ -176,20 +171,15 @@ public class UserManager {
         return !active;
     }
 
-    public void sendAcceptionMailTo(User aUser) throws MessagingException {
-        //TODO remove hard code
-
-        Integer port = 465;
-        String host = "smtp.gmail.com";
-        String from = "m1paiemail@gmail.com";
-        String username = "m1paiemail@gmail.com";
-        String password = "cotelette";
-
+    public void sendMailTo(User aUser, String title, String content) throws MessagingException {
         Properties props = new Properties();
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.port", port);
+        props.put("mail.smtp.host", UserManager.HOST);
+        props.put("mail.smtp.port", UserManager.PORT);
         props.put("mail.smtp.ssl.enable", true);
         props.put("mail.smtp.auth", true);
+
+        String username = UserManager.USERNAME;
+        String password = UserManager.PASSWORD;
 
         Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication pa = new PasswordAuthentication(username, password);
@@ -200,13 +190,22 @@ public class UserManager {
             }
         });
 
+        Transport.send(generateMessageFrom(aUser, session, title, content));
+    }
+
+    public MimeMessage generateMessageFrom(User aUser, Session session, String title, String content) throws MessagingException {
         MimeMessage message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(from));
+        message.setFrom(new InternetAddress(UserManager.FROM));
         InternetAddress[] address = {new InternetAddress(aUser.getMail())};
         message.setRecipients(Message.RecipientType.TO, address);
-        message.setSubject("Partinizer - Inscription");
+        message.setSubject(title);
         message.setSentDate(new Date());
-        message.setText("Bonjour,\n" +
+        message.setText(content);
+        return message;
+    }
+
+    public String subscriptionMailContentFor(User aUser) {
+        return "Bonjour,\n" +
                 "\n" +
                 "Vous recevez cet email car quelqu'un, avec un petit peu de chance vous, s'est inscrit à Partinizer.\n"+
                 "S'il s'agit de vous, cliquez juste sur le lien ci dessous ou copiez/collez le dans votre navigateur.\n" +
@@ -215,10 +214,7 @@ public class UserManager {
                 "\n" +
                 "Si vous n'avez pas demandé cette inscription, veuillez ignorer cet email..\n" +
                 "Merci,\n" +
-                "Partinizer ");
-        Transport.send(message);
-
-
+                "Partinizer ";
     }
 
     public User getUserByMail(String mail) {
