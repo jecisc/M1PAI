@@ -5,6 +5,8 @@ import com.partinizer.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+
 /**
  * Created by vincent on 12/03/16.
  */
@@ -53,7 +55,7 @@ public class UserService {
         return this.userManager.validateUserSubscription(user);
     }
 
-    public boolean generateNewPasswordFor(User user) {
+    public boolean generateNewPasswordFor(User user) throws MessagingException {
         return this.userManager.generateNewPasswordFor(user);
     }
 }

@@ -229,15 +229,12 @@ public class UserManager {
         return RandomStringUtils.random(8, 0, 0, true, true, null, new SecureRandom());
     }
 
-    public boolean generateNewPasswordFor(User user) {
-        try {
+    public boolean generateNewPasswordFor(User user) throws MessagingException {
             String newPW = this.generateNewPassword();
             this.sendMailTo(user, "Partinizer - Nouveau Mot de Passe", this.resetPasswordMailContentFor(user, newPW));
             user.setPassword(newPW);
             return (userRepository.save(user).getPassword().equals(newPW));
-        } catch (MessagingException e) {
-           return false;
-        }
+
     }
 
     private String resetPasswordMailContentFor(User user, String passwd) {

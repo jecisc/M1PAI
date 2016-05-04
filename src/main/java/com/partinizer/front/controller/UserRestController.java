@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
@@ -91,11 +92,15 @@ public class UserRestController {
 
         User user = this.userService.getUserByPseudo(userName);
 
-        if (!(user == null) && this.userService.generateNewPasswordFor(user)) {
-            return new ResponseEntity<>("TODO", HttpStatus.ACCEPTED);
+        try {
+            if (!(user == null) && this.userService.generateNewPasswordFor(user)) {
+                return new ResponseEntity<>("Nouveau mot de passe envoyé.", HttpStatus.ACCEPTED);
+            }
+        } catch (MessagingException e) {
+            return new ResponseEntity<>("Erreur temporaire. Veuillez reéssayer plus tard.", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("TODO", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Utilisateur inconnu. Veuillez donner un pseudo correct.", HttpStatus.BAD_REQUEST);
     }
 
     @CrossOrigin
