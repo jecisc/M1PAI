@@ -2,6 +2,7 @@ package com.partinizer.front.controller;
 
 import com.partinizer.business.service.UserService;
 import com.partinizer.data.entity.User;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,16 +92,20 @@ public class UserRestController {
     public ResponseEntity<String> forgotPassword(@RequestParam(value = "userName", defaultValue = "") String userName) {
 
         User user = this.userService.getUserByPseudo(userName);
+        JSONObject jsonWriter = new JSONObject();
 
         try {
             if (!(user == null) && this.userService.generateNewPasswordFor(user)) {
-                return new ResponseEntity<>("Nouveau mot de passe envoyé.", HttpStatus.ACCEPTED);
+                jsonWriter.put("message", "Nouveau mot de passe envoyé.");
+                return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.ACCEPTED);
+            } else {
+                jsonWriter.put("message", "Utilisateur inconnu. Veuillez donner un pseudo correct.");
             }
         } catch (MessagingException e) {
-            return new ResponseEntity<>("Erreur temporaire. Veuillez reéssayer plus tard.", HttpStatus.BAD_REQUEST);
+            jsonWriter.put("message", "Erreur temporaire. Veuillez reéssayer plus tard.");
         }
 
-        return new ResponseEntity<>("Utilisateur inconnu. Veuillez donner un pseudo correct.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.BAD_REQUEST);
     }
 
     @CrossOrigin
