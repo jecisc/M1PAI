@@ -45,7 +45,7 @@ public class User {
     private String pseudo;
 
     @Column(name="isactive")
-    private boolean isActive;
+    protected Boolean isActive;
 
     @Column(name="avatar")
     private String avatar;
@@ -97,7 +97,10 @@ public class User {
         this.avatar = avatar;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
+        if(this.isActive == null){
+            this.isActive = false;
+        }
         return isActive;
     }
 

@@ -1,5 +1,6 @@
 package com.partinizer.business.service;
 
+import com.partinizer.business.exceptions.WrongInformationException;
 import com.partinizer.business.manager.UserManager;
 import com.partinizer.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,8 @@ public class UserService {
 
     }
 
-    public User createUser(User user){
-
+    public User createUser(User user) throws WrongInformationException {
          return userManager.createUser(user);
-        
     }
 
     public User getUserByMailOrPseudo(User user){

@@ -1,5 +1,6 @@
 package com.partinizer.business.manager;
 
+import com.partinizer.business.exceptions.*;
 import com.partinizer.data.entity.User;
 import com.partinizer.data.repository.UserRepository;
 import org.apache.commons.lang.RandomStringUtils;
@@ -43,27 +44,25 @@ public class UserManager {
      * @param user
      * @return The User created or null if not
      */
-    public User createUser(User user) {
+    public User createUser(User user) throws WrongInformationException {
 
-        if (checkPseudo(user.getPseudo()) && checkPassword(user.getPassword())
-                && checkMail(user.getMail()) && checkName(user.getName()) &&
-                checkFirstName(user.getFirstName()) && checkActive(user.isActive())) {
-            /* Check if mail or pseudo already exist */
-            User user_exist = getUserByMailOrPseudo(user);
+        this.userIsValidForSubscription(user);
+        user.setRegistDate(new Date(System.currentTimeMillis()));
 
-            if (user_exist == null) {
-                user.setRegistDate(new Date(System.currentTimeMillis()));
-                try {
-                    this.sendMailTo(user, "Partinizer - Inscription", this.subscriptionMailContentFor(user));
-                } catch (MessagingException e) {
-                    e.printStackTrace(); //TODO maybe a retry?
-                }
-                return userRepository.save(user);
-
-            }
+        try {
+            this.sendMailTo(user, "Partinizer - Inscription", this.subscriptionMailContentFor(user));
+        } catch (MessagingException e) {
+            e.printStackTrace(); //TODO maybe a retry?
         }
+        return userRepository.save(user);
 
-        return null;
+    }
+
+    public boolean userIsValidForSubscription(User user) throws WrongInformationException {
+        return isValidPseudo(user.getPseudo()) && isValidPassword(user.getPassword())
+                && isValidMail(user.getMail()) && checkName(user.getName()) &&
+                checkFirstName(user.getFirstName()) && checkActive(user.isActive())
+                && userPseudoIsFree(user.getPseudo()) && userMailIsFree(user.getMail());
     }
 
 
@@ -143,32 +142,60 @@ public class UserManager {
         return getUser(user) != null;
     }
 
-    private boolean checkPseudo(String pseudo) {
-
-        return pseudo != null && pseudo.length() > 4 && pseudo.length() < 20;
-
+    public boolean isValidPseudo(String pseudo) throws WrongPseudoException {
+        if(pseudo != null && pseudo.length() > 4 && pseudo.length() < 20){
+            return true;
+        }
+        throw new WrongPseudoException();
     }
 
-    private boolean checkPassword(String password) {
-
-        return password != null && password.matches(UserManager.REGEXPASSWORD);
+    public boolean isValidPassword(String password) throws WrongPasswordException {
+        if(password != null && password.matches(UserManager.REGEXPASSWORD)){
+            return true;
+        }
+        throw new WrongPasswordException();
     }
 
-    private boolean checkMail(String mail) {
-
-        return mail != null && !mail.equals("") && mail.matches(UserManager.REGEXMAIL);
+    public boolean isValidMail(String mail) throws WrongMailException {
+        if(mail != null && !mail.equals("") && mail.matches(UserManager.REGEXMAIL)){
+            return true;
+        }
+        throw new WrongMailException();
     }
 
-    private boolean checkName(String name) {
-        return name != null && !name.equals("") && name.length() >= 3 && name.length() <= 40;
+    public boolean checkName(String name) throws WrongNameException {
+        if(name != null && name.length() >= 3 && name.length() <= 40){
+            return true;
+        }
+        throw new WrongNameException();
     }
 
-    private boolean checkFirstName(String firstName) {
-        return firstName != null && !firstName.equals("") && firstName.length() >= 3 && firstName.length() <= 40;
+    public boolean checkFirstName(String firstName) throws WrongFirstNameException {
+        if(firstName != null && firstName.length() >= 3 && firstName.length() <= 40){
+            return true;
+        }
+        throw new WrongFirstNameException();
     }
 
-    private boolean checkActive(Boolean active) {
-        return !active;
+    public boolean checkActive(Boolean active) throws WrongActivityException {
+        if(!active){
+            return true;
+        }
+        throw new WrongActivityException();
+    }
+
+    public boolean userPseudoIsFree(String pseudo) throws WrongPseudoIsNotFreeException {
+        if(this.userRepository.findByPseudo(pseudo) == null){
+            return true;
+        }
+        throw new WrongPseudoIsNotFreeException();
+    }
+
+    public boolean userMailIsFree(String mail) throws WrongMailIsNotFreeException {
+        if(this.userRepository.findByMail(mail) == null){
+            return true;
+        }
+        throw new WrongMailIsNotFreeException();
     }
 
     public void sendMailTo(User aUser, String title, String content) throws MessagingException {

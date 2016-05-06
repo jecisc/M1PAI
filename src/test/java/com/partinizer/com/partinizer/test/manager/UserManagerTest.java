@@ -1,6 +1,7 @@
 package com.partinizer.com.partinizer.test.manager;
 
 import com.partinizer.PartinizerApplication;
+import com.partinizer.business.exceptions.WrongInformationException;
 import com.partinizer.business.manager.UserManager;
 import com.partinizer.data.entity.User;
 import org.apache.commons.lang.RandomStringUtils;
@@ -87,26 +88,39 @@ public class UserManagerTest {
 
         user.setPassword("fkjd5sfldskmM");
 
-        user=userManager.createUser(user);
-        assertNotNull(user);
+        try {
+            userManager.createUser(user);
+            assert true;
+        } catch (WrongInformationException e) {
+            assert false;
+        }
     }
 
 
-   @Test
+    @Test
     public void createUserWithBadPassword(){
 
         user.setPassword("fkjd5sfldskm");
         user.setMail("mailBidon@mail.com");
-        user=userManager.createUser(user);
-        assertNull(user);
+        try {
+            userManager.createUser(user);
+            assert false;
+        } catch (WrongInformationException e) {
+            assert true;
+        }
+
     }
 
     @Test
     public void createUserWithBadMail(){
         user.setMail("mailbidonghfsdhkjfg");
         user.setPassword("fkjd5sfldskmM");
-        user=userManager.createUser(user);
-        assertNull(user);
+        try {
+            userManager.createUser(user);
+            assert false;
+        } catch (WrongInformationException e) {
+            assert true;
+        }
     }
 
     @Test
@@ -115,16 +129,24 @@ public class UserManagerTest {
         user.setPseudo("pseudoTest_1");
         user.setMail("mailTest_1@gmail.com");
         user.setPassword("fkjd5sfldskmM");
-        user=userManager.createUser(user);
-        assertNull(user);
+        try {
+            userManager.createUser(user);
+            assert false;
+        } catch (WrongInformationException e) {
+            assert true;
+        }
     }
 
     @Test
     public void createUserWithActiveTrue(){
         user.setActive(true);
         user.setPassword("fkjd5sfldskmM");
-        user=userManager.createUser(user);
-        assertNull(user);
+        try {
+            userManager.createUser(user);
+            assert false;
+        } catch (WrongInformationException e) {
+            assert true;
+        }
     }
 
     @Test

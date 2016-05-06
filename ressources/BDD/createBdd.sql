@@ -39,7 +39,7 @@ CREATE TABLE APPLIUSER (
   passwd      CHARACTER VARYING(64) NOT NULL,
   inscription DATE                  NOT NULL,
   isActive    BOOLEAN               NOT NULL,
-  avatar      CHARACTER VARYING     NOT NULL
+  avatar      CHARACTER VARYING
 );
 
 ALTER SEQUENCE user_id_seq OWNED BY APPLIUSER.idUser;

@@ -1,5 +1,6 @@
 package com.partinizer.front.controller;
 
+import com.partinizer.business.exceptions.WrongInformationException;
 import com.partinizer.business.service.UserService;
 import com.partinizer.data.entity.User;
 import org.json.simple.JSONObject;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.validation.constraints.Null;
 
 
 /**
@@ -31,19 +33,21 @@ public class UserRestController {
     /**Méthode de création d'un utilisateur basé sur une requête HTTP POST**/
     @CrossOrigin
     @RequestMapping(value = "/create", method=RequestMethod.POST)
-    public ResponseEntity<User> createUser(@RequestBody User user){
+    public ResponseEntity<String> createUser(@RequestBody User user) {
 
-        if(user==null){
-            return new ResponseEntity<>(user,HttpStatus.BAD_REQUEST);
+        JSONObject jsonWriter = new JSONObject();
+
+        try {
+            userService.createUser(user);
+            jsonWriter.put("message", "Utilisateur créé.");
+            return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.CREATED);
+        } catch (WrongInformationException e) {
+            jsonWriter.put("message", e.getFrontMessage());
+        } catch (NullPointerException e) {
+            jsonWriter.put("message", "Informations incomplétes.");
         }
 
-        user= userService.createUser(user);
-
-        if(user==null){
-            return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
-        }
-
-            return new ResponseEntity<>(user,HttpStatus.CREATED);
+        return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.BAD_REQUEST);
 
     }
 
