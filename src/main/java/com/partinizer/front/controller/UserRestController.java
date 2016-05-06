@@ -7,13 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 
 
 /**
@@ -30,30 +27,6 @@ public class UserRestController {
     public UserRestController(UserService userService){
         this.userService=userService;
     }
-
-    @CrossOrigin
-    @RequestMapping(value = "/login", method=RequestMethod.POST)
-    public ResponseEntity<String> login(@RequestBody User user){
-        if(user==null && user.getMail()!=null && user.getPassword()!=null){
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        }
-
-        User user_=userService.getUserByMailOrPseudo(user);
-
-        //On vérifie que la requête à renvoyé quelque chose à partir du mail
-        if(user_==null){
-            return new ResponseEntity<String>(HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if(user.getPassword().equals(user_.getPassword()))
-           return new ResponseEntity<String>(HttpStatus.ACCEPTED);
-
-        //Mot de passe non correcte
-        return new ResponseEntity<String>(HttpStatus.NOT_ACCEPTABLE);
-    }
-
-
-
 
     /**Méthode de création d'un utilisateur basé sur une requête HTTP POST**/
     @CrossOrigin
@@ -113,12 +86,7 @@ public class UserRestController {
     public ResponseEntity<User> getUser(Authentication authentication){
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = new User();
-        user.setPseudo(userDetails.getUsername());
-        user=userService.getUserByMailOrPseudo(user);
-
-        return new ResponseEntity<User>(user
-                , HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserByPseudo(userDetails.getUsername()), HttpStatus.OK);
 
     }
 
