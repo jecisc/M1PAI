@@ -1,5 +1,6 @@
 package com.partinizer.front.controller;
 
+import com.partinizer.business.exceptions.UserDoesNotExistException;
 import com.partinizer.business.exceptions.WrongInformationException;
 import com.partinizer.business.service.UserService;
 import com.partinizer.data.entity.User;
@@ -55,31 +56,37 @@ public class UserRestController {
     @RequestMapping(value = "/validation", method = RequestMethod.GET)
     public ResponseEntity<String> validateUser(@RequestParam(value = "mail", defaultValue = "") String mail, @RequestParam(value = "cle", defaultValue = "0") String hash) {
 
-        User user = this.userService.getUserByMail(mail);
-
-        if (!(user == null) && (mail.hashCode() == Integer.valueOf(hash)) && this.userService.validateUserSubscription(user)) {
-            return new ResponseEntity<>("Votre validation a bien été effectuée.", HttpStatus.ACCEPTED);
+        User user = null;
+        try {
+            user = this.userService.getUserByMail(mail);
+            if (mail.hashCode() == Integer.valueOf(hash) && this.userService.validateUserSubscription(user)) {
+                return new ResponseEntity<>("Votre validation a bien été effectuée.", HttpStatus.ACCEPTED);
+            }
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>("Aucun utilisateur correspondant à " + e.getMail() + " trouvé :(", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("Votre lien n'est pas bon :(", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Votre lien n'est pas bon, le token est incorrect :(", HttpStatus.BAD_REQUEST);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/forgotPassword", method = RequestMethod.GET)
     public ResponseEntity<String> forgotPassword(@RequestParam(value = "userName", defaultValue = "") String userName) {
 
-        User user = this.userService.getUserByPseudo(userName);
         JSONObject jsonWriter = new JSONObject();
 
         try {
-            if (!(user == null) && this.userService.generateNewPasswordFor(user)) {
+            User user = this.userService.getUserByPseudo(userName);
+            if (this.userService.generateNewPasswordFor(user)) {
                 jsonWriter.put("message", "Nouveau mot de passe envoyé.");
                 return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.ACCEPTED);
             } else {
-                jsonWriter.put("message", "Utilisateur inconnu. Veuillez donner un pseudo correct.");
+                jsonWriter.put("message", "Une erreur s'est produite. Veuilles réessayer.");
             }
         } catch (MessagingException e) {
-            jsonWriter.put("message", "Erreur temporaire. Veuillez reéssayer plus tard.");
+            jsonWriter.put("message", "Erreur temporaire. Veuillez réessayer plus tard.");
+        }catch (UserDoesNotExistException e) {
+            jsonWriter.put("message", "Aucun utilisateur connu sous le nom de " + e.getPseudo() + ".");
         }
 
         return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.BAD_REQUEST);
@@ -87,7 +94,7 @@ public class UserRestController {
 
     @CrossOrigin
     @RequestMapping(value="/get", method= RequestMethod.GET)
-    public ResponseEntity<User> getUser(Authentication authentication){
+    public ResponseEntity<User> getUser(Authentication authentication) throws UserDoesNotExistException {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return new ResponseEntity<>(userService.getUserByPseudo(userDetails.getUsername()), HttpStatus.OK);

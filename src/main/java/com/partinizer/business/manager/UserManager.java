@@ -244,12 +244,24 @@ public class UserManager {
                 "Partinizer ";
     }
 
-    public User getUserByMail(String mail) {
-        return this.userRepository.findByMail(mail);
+    public User getUserByMail(String mail) throws UserDoesNotExistException {
+        User user = this.userRepository.findByMail(mail);
+        if( user == null){
+            UserDoesNotExistException exception = new UserDoesNotExistException();
+            exception.setMail(mail);
+            throw exception;
+        }
+        return user;
     }
 
-    public User getUserByPseudo(String pseudo) {
-        return this.userRepository.findByPseudo(pseudo);
+    public User getUserByPseudo(String pseudo) throws UserDoesNotExistException {
+        User user = this.userRepository.findByPseudo(pseudo);
+        if( user == null){
+            UserDoesNotExistException exception = new UserDoesNotExistException();
+            exception.setPseudo(pseudo);
+            throw exception;
+        }
+        return user;
     }
 
     public String generateNewPassword() {

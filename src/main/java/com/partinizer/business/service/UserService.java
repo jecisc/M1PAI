@@ -1,5 +1,6 @@
 package com.partinizer.business.service;
 
+import com.partinizer.business.exceptions.UserDoesNotExistException;
 import com.partinizer.business.exceptions.WrongInformationException;
 import com.partinizer.business.manager.UserManager;
 import com.partinizer.data.entity.User;
@@ -42,11 +43,11 @@ public class UserService {
         return user;
     }
 
-    public User getUserByMail(String mail){
+    public User getUserByMail(String mail) throws UserDoesNotExistException {
         return userManager.getUserByMail(mail);
     }
 
-    public User getUserByPseudo(String pseudo){
+    public User getUserByPseudo(String pseudo) throws UserDoesNotExistException {
         return userManager.getUserByPseudo(pseudo);
     }
 
