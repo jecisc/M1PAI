@@ -97,6 +97,9 @@ public class User {
         this.avatar = avatar;
     }
 
+    /**
+     * I return the state of the user activity. I use a defensive strategy to initialize it.
+     */
     public Boolean isActive() {
         if(this.isActive == null){
             this.isActive = false;

@@ -39,10 +39,10 @@ public class UserManager {
     //TODO limiter le nombre de caractère  password, confirmation password
 
     /**
-     * Create a User entity if all require fields are fill
-     *
-     * @param user
-     * @return The User created or null if not
+     * I add a new user in the database and send an email to activate the account.
+     * @param user The user to add.
+     * @return The user updated (for example with a new id).
+     * @throws WrongInformationException raised of a user have a wrong information.
      */
     public User createUser(User user) throws WrongInformationException {
 
@@ -58,11 +58,20 @@ public class UserManager {
 
     }
 
-    public boolean userIsValidForSubscription(User user) throws WrongInformationException {
-        return isValidPseudo(user.getPseudo()) && isValidPassword(user.getPassword())
-                && isValidMail(user.getMail()) && checkName(user.getName()) &&
-                checkFirstName(user.getFirstName()) && checkActive(user.isActive())
-                && userPseudoIsFree(user.getPseudo()) && userMailIsFree(user.getMail());
+    /**
+     * I test a user and check that it is a valid user for subscription.
+     * @param user The user to check.
+     * @throws WrongInformationException raised if the user is not valid.'
+     */
+    public void userIsValidForSubscription(User user) throws WrongInformationException {
+        this.isValidPseudo(user.getPseudo());
+        this.isValidPassword(user.getPassword());
+        this.isValidMail(user.getMail());
+        this.checkName(user.getName());
+        this.checkFirstName(user.getFirstName());
+        this.checkIsNotActive(user.isActive());
+        this.userPseudoIsFree(user.getPseudo());
+        this.userMailIsFree(user.getMail());
     }
 
 
@@ -73,6 +82,10 @@ public class UserManager {
      * @return The User obtained or null if not
      */
     public User getUser(User user) {
+        //TODO
+        // This should be improve.
+        // Null management is not right in OO programming.
+        // Else we should use error of null object pattern.
         if (validUser(user)) {
 
             return userRepository.findOne(user.getId());
@@ -93,7 +106,7 @@ public class UserManager {
      * @return The user obtained or null if not
      */
     public User getUserByMailOrPseudo(User user) {
-
+        //TODO see same method comment on UserService
         if (user != null && (user.getMail() != null && !user.getMail().equals("")) ||
                 (user.getPseudo() != null && !user.getPseudo().equals(""))) {
             return userRepository.findByMailOrPseudo(user.getMail(), user.getPseudo());
@@ -103,6 +116,11 @@ public class UserManager {
         return null;
     }
 
+    /**
+     * I change the status of a user from inactive to active.
+     * @param user The user to activate.
+     * @return A boolean to know if everything was fine.
+     */
     public Boolean validateUserSubscription(User user) {
         user.setActive(true);
         return (this.userRepository.save(user)).isActive();
@@ -120,7 +138,10 @@ public class UserManager {
      * @return The User deleted or null if not
      */
     public User deleteUser(User user) {
-
+        //TODO
+        // This should be improve.
+        // Null management is not right in OO programming.
+        // Else we should use error of null object pattern.
         if (validUser(user) && userExist(user)) {
             userRepository.delete(user);
 
@@ -142,62 +163,101 @@ public class UserManager {
         return getUser(user) != null;
     }
 
-    public boolean isValidPseudo(String pseudo) throws WrongPseudoException {
-        if(pseudo != null && pseudo.length() > 4 && pseudo.length() < 20){
-            return true;
+    /**
+     * I check that the user pseudo is valid.
+     * @param pseudo The pseudo of the user.
+     * @throws WrongPseudoException raised if the information is not valid.
+     */
+    public void isValidPseudo(String pseudo) throws WrongPseudoException {
+        if(pseudo == null || pseudo.length() < 4 || pseudo.length() > 20){
+            throw new WrongPseudoException();
         }
-        throw new WrongPseudoException();
     }
 
-    public boolean isValidPassword(String password) throws WrongPasswordException {
-        if(password != null && password.matches(UserManager.REGEXPASSWORD)){
-            return true;
+    /**
+     * I check that the user password is valid.
+     * @param password The password of the user.
+     * @throws WrongPasswordException raised if the information is not valid.
+     */
+    public void isValidPassword(String password) throws WrongPasswordException {
+        if(password == null || !password.matches(UserManager.REGEXPASSWORD)){
+            throw new WrongPasswordException();
         }
-        throw new WrongPasswordException();
     }
 
-    public boolean isValidMail(String mail) throws WrongMailException {
-        if(mail != null && !mail.equals("") && mail.matches(UserManager.REGEXMAIL)){
-            return true;
+    /**
+     * I check that the user mail is valid.
+     * @param mail The mail of the user.
+     * @throws WrongMailException raised if the information is not valid.
+     */
+    public void isValidMail(String mail) throws WrongMailException {
+        if(mail == null || !mail.matches(UserManager.REGEXMAIL)){
+            throw new WrongMailException();
         }
-        throw new WrongMailException();
     }
 
-    public boolean checkName(String name) throws WrongNameException {
-        if(name != null && name.length() >= 3 && name.length() <= 40){
-            return true;
+    /**
+     * I check that the user name is valid.
+     * @param name The name of the user.
+     * @throws WrongNameException raised if the information is not valid.
+     */
+    public void checkName(String name) throws WrongNameException {
+        if(name == null || name.length() < 3 || name.length() > 40){
+            throw new WrongNameException();
         }
-        throw new WrongNameException();
     }
 
-    public boolean checkFirstName(String firstName) throws WrongFirstNameException {
-        if(firstName != null && firstName.length() >= 3 && firstName.length() <= 40){
-            return true;
+    /**
+     * I check that the user first name is valid.
+     * @param firstName The first name of the user.
+     * @throws WrongFirstNameException raised if the information is not valid.
+     */
+    public void checkFirstName(String firstName) throws WrongFirstNameException {
+        if(firstName == null || firstName.length() < 3 || firstName.length() > 40){
+            throw new WrongFirstNameException();
         }
-        throw new WrongFirstNameException();
     }
 
-    public boolean checkActive(Boolean active) throws WrongActivityException {
-        if(!active){
-            return true;
+    /**
+     * I check that the user activity is valid.
+     * @param active The activity of the user.
+     * @throws WrongActivityException raised if the information is not valid.
+     */
+    public void checkIsNotActive(Boolean active) throws WrongActivityException {
+        if(active){
+            throw new WrongActivityException();
         }
-        throw new WrongActivityException();
     }
 
-    public boolean userPseudoIsFree(String pseudo) throws WrongPseudoIsNotFreeException {
-        if(this.userRepository.findByPseudo(pseudo) == null){
-            return true;
+    /**
+     * I check that the user pseudo is free.
+     * @param pseudo The pseudo of the user.
+     * @throws WrongPseudoIsNotFreeException raised if the information is not valid.
+     */
+    public void userPseudoIsFree(String pseudo) throws WrongPseudoIsNotFreeException {
+        if(this.userRepository.findByPseudo(pseudo) != null){
+            throw new WrongPseudoIsNotFreeException();
         }
-        throw new WrongPseudoIsNotFreeException();
     }
 
-    public boolean userMailIsFree(String mail) throws WrongMailIsNotFreeException {
-        if(this.userRepository.findByMail(mail) == null){
-            return true;
+    /**
+     * I check that the user mail is free.
+     * @param mail The mail of the user.
+     * @throws WrongMailIsNotFreeException raised if the information is not valid.
+     */
+    public void userMailIsFree(String mail) throws WrongMailIsNotFreeException {
+        if(this.userRepository.findByMail(mail) != null){
+            throw new WrongMailIsNotFreeException();
         }
-        throw new WrongMailIsNotFreeException();
     }
 
+    /**
+     * I send an email to a user.
+     * @param aUser The user that need to receive the mail.
+     * @param title the title of the mail.
+     * @param content The content of the mail.
+     * @throws MessagingException raised if there is a problem.
+     */
     public void sendMailTo(User aUser, String title, String content) throws MessagingException {
         Properties props = new Properties();
         props.put("mail.smtp.host", UserManager.HOST);
@@ -220,6 +280,15 @@ public class UserManager {
         Transport.send(generateMessageFrom(aUser, session, title, content));
     }
 
+    /**
+     * I generate a MimeMessage to be send in a mail.
+     * @param aUser The user that need the mail.
+     * @param session The session.
+     * @param title The title of the mail.
+     * @param content The content of the mail.
+     * @return The mime message created.
+     * @throws MessagingException raised if there is a problem.
+     */
     public MimeMessage generateMessageFrom(User aUser, Session session, String title, String content) throws MessagingException {
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(UserManager.FROM));
@@ -231,6 +300,12 @@ public class UserManager {
         return message;
     }
 
+    /**
+     * I generate a mail for a subscription.
+     * This mail will contain a link to activate his account.
+     * @param aUser The user that subscribe.
+     * @return The content of the mail.
+     */
     public String subscriptionMailContentFor(User aUser) {
         return "Bonjour,\n" +
                 "\n" +
@@ -244,6 +319,12 @@ public class UserManager {
                 "Partinizer ";
     }
 
+    /**
+     * I return the user matching an email.
+     * @param mail The email of the user.
+     * @return The user matching the mail.
+     * @throws UserDoesNotExistException raised if there is no user with this mail.
+     */
     public User getUserByMail(String mail) throws UserDoesNotExistException {
         User user = this.userRepository.findByMail(mail);
         if( user == null){
@@ -254,6 +335,12 @@ public class UserManager {
         return user;
     }
 
+    /**
+     * I return the user matching a pseudo.
+     * @param pseudo The pseudo of the user.
+     * @return The user matching the pseudo.
+     * @throws UserDoesNotExistException raised of there is no user wth this pseudo.
+     */
     public User getUserByPseudo(String pseudo) throws UserDoesNotExistException {
         User user = this.userRepository.findByPseudo(pseudo);
         if( user == null){
@@ -264,19 +351,41 @@ public class UserManager {
         return user;
     }
 
+    /**
+     * I return a new password for a user.
+     * @return the new password.
+     */
     public String generateNewPassword() {
-        return RandomStringUtils.random(8, 0, 0, true, true, null, new SecureRandom());
+        try {
+            String password = RandomStringUtils.random(9, 0, 0, true, true, null, new SecureRandom());
+            this.isValidPassword(password);
+            return password;
+        } catch (WrongPasswordException e) {
+            //TODO this can be improved but it will do the trick for now.
+            return this.generateNewPassword();
+        }
     }
 
+    /**
+     * I generate a new password for a user and send notify this user.
+     * @param user The user that need a new password.
+     * @return A boolean to know if everything went fine.
+     * @throws MessagingException raised if there is a problem with the mail.
+     */
     public boolean generateNewPasswordFor(User user) throws MessagingException {
             String newPW = this.generateNewPassword();
-            this.sendMailTo(user, "Partinizer - Nouveau Mot de Passe", this.resetPasswordMailContentFor(user, newPW));
+            this.sendMailTo(user, "Partinizer - Nouveau Mot de Passe", this.resetPasswordMailContentFor(newPW));
             user.setPassword(newPW);
             return (userRepository.save(user).getPassword().equals(newPW));
 
     }
 
-    private String resetPasswordMailContentFor(User user, String passwd) {
+    /**
+     * I generate a mail to send to a user needed a new password.
+     * @param passwd The new password.
+     * @return The content of the mail.
+     */
+    public String resetPasswordMailContentFor(String passwd) {
         return "Bonjour,\n" +
                 "\n" +
                 "Vous recevez cet email car vous avez demandé un nouveau mot de passe.\n"+

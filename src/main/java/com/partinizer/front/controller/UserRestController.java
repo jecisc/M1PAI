@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
-import javax.validation.constraints.Null;
 
 
 /**
@@ -52,11 +51,18 @@ public class UserRestController {
 
     }
 
+    /**
+     * Rest service receiving a email and a token.
+     * If the token is right I will activate the account of the user matching the mail.
+     * @param mail The email of the user to activate.
+     * @param hash The token to verify the link.
+     * @return A response containing a string with the answer.
+     */
     @CrossOrigin
     @RequestMapping(value = "/validation", method = RequestMethod.GET)
     public ResponseEntity<String> validateUser(@RequestParam(value = "mail", defaultValue = "") String mail, @RequestParam(value = "cle", defaultValue = "0") String hash) {
 
-        User user = null;
+        User user;
         try {
             user = this.userService.getUserByMail(mail);
             if (mail.hashCode() == Integer.valueOf(hash) && this.userService.validateUserSubscription(user)) {
@@ -69,6 +75,11 @@ public class UserRestController {
         return new ResponseEntity<>("Votre lien n'est pas bon, le token est incorrect :(", HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * I am a REST service that is executed if a user forget his password.
+     * @param userName The pseudo of the user.
+     * @return An answer containing a JSON. The filed #message is mapped with the message to show in the front.
+     */
     @CrossOrigin
     @RequestMapping(value = "/forgotPassword", method = RequestMethod.GET)
     public ResponseEntity<String> forgotPassword(@RequestParam(value = "userName", defaultValue = "") String userName) {

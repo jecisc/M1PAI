@@ -1,7 +1,7 @@
 package com.partinizer.business.exceptions;
 
 /**
- * Created by Cyril on 06/05/2016.
+ * I am an exception raised when a password is not valid.
  */
 public class WrongPasswordException extends WrongInformationException {
 
