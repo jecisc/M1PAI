@@ -173,9 +173,12 @@ public class UserManager {
         checkFirstName(userUpdate.getFirstName());
         checkName(userUpdate.getName());
         checkAvatar(userUpdate.getAvatar());
-        isValidPassword(userUpdate.getPassword());
 
-        userAuthenticate.setPassword(userUpdate.getPassword());
+        if(userUpdate.getPassword()!=null) {
+            isValidPassword(userUpdate.getPassword());
+            userAuthenticate.setPassword(userUpdate.getPassword());
+        }
+
         userAuthenticate.setName(userUpdate.getName());
         userAuthenticate.setFirstName(userUpdate.getFirstName());
         userAuthenticate.setAvatar(userUpdate.getAvatar());
