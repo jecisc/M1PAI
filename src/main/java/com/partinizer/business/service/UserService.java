@@ -6,12 +6,8 @@ import com.partinizer.business.manager.UserManager;
 import com.partinizer.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.mail.MessagingException;
-
-/**
- * Created by vincent on 12/03/16.
- */
+import java.util.List;
 
 /**
  * Implémentation de la logique métier de l'entité User
@@ -89,4 +85,21 @@ public class UserService {
     public boolean generateNewPasswordFor(User user) throws MessagingException {
         return this.userManager.generateNewPasswordFor(user);
     }
+
+    public List<User> searchUser(String name,int page, int size){
+        return userManager.searchUser(name,page,size);
+    }
+
+    public boolean deleteFriend(User user, long idFriend){
+        return userManager.deleteFriend(user,idFriend);
+    }
+
+    public boolean addFriend(User user,long idFriend) {return userManager.addFriend(user,idFriend);}
+
+    public boolean denyFriendRequest(User user,long idFriend){return userManager.deleteFriendRequest(user,idFriend);}
+
+    public User updateUser(User userUpdate,User userAuthenticate) throws WrongInformationException {
+        return userManager.updateUser(userUpdate,userAuthenticate);
+    }
+
 }

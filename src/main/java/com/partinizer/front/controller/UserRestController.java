@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.util.List;
 
 
 /**
@@ -28,6 +29,29 @@ public class UserRestController {
     @Autowired
     public UserRestController(UserService userService){
         this.userService=userService;
+    }
+
+    /**
+     * Update user information (lastname,firstname and avatar)
+     * @param authentication
+     * @param userUpdate
+     * @return
+     *      The user updated
+     */
+    @RequestMapping(value="/update", method=RequestMethod.POST)
+    public ResponseEntity<User> update(Authentication authentication,@RequestBody User userUpdate){
+
+        User user=getUserFromAuthentication(authentication);
+
+        if(userUpdate!=null && userUpdate.getId()!=0 && userUpdate.getId()==user.getId()){
+            try {
+                return new ResponseEntity<>(userService.updateUser(userUpdate,user),HttpStatus.OK);
+            } catch (WrongInformationException e) {
+                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**Méthode de création d'un utilisateur basé sur une requête HTTP POST**/
@@ -107,26 +131,48 @@ public class UserRestController {
     @RequestMapping(value="/get", method= RequestMethod.GET)
     public ResponseEntity<User> getUser(Authentication authentication) throws UserDoesNotExistException {
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return new ResponseEntity<>(userService.getUserByPseudo(userDetails.getUsername()), HttpStatus.OK);
+        return new ResponseEntity<>(getUserFromAuthentication(authentication), HttpStatus.OK);
 
     }
 
     @RequestMapping(value="/friends", method= RequestMethod.GET)
-    public ResponseEntity<User> getFriends(Authentication authentication){
+    public ResponseEntity<List<User>> getFriends(Authentication authentication){
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = new User();
-        user.setPseudo(userDetails.getUsername());
-        user=userService.getUserByMailOrPseudo(user);
+        User user=getUserFromAuthentication(authentication);
 
         user=userService.getAllFriends(user.getId());
 
         if(user!=null)
-            return new  ResponseEntity<User>(user,HttpStatus.OK);
+            return new  ResponseEntity<>(user.getFriends(),HttpStatus.OK);
 
-        return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(user.getFriends(),HttpStatus.BAD_REQUEST);
     }
+
+
+    @RequestMapping(value="/friends/delete/{idFriend}",method=RequestMethod.DELETE)
+    public ResponseEntity<User> deleteFriend(Authentication authentication,@PathVariable("idFriend") long idFriend){
+
+        User user=getUserFromAuthentication(authentication);
+
+        if(userService.deleteFriend(user,idFriend))
+            return new  ResponseEntity<>(user,HttpStatus.OK);
+
+        return new ResponseEntity<>(user,HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value="/search",params = {"size","page","name"},method= RequestMethod.GET)
+    public ResponseEntity<List<User>> searchUser(Authentication authentication,@RequestParam("size") int size,@RequestParam("page") int page,@RequestParam("name") String name){
+
+        User user=getUserFromAuthentication(authentication);
+
+        List<User> searchUsers=userService.searchUser(name,page,size);
+
+        if(searchUsers!=null)
+            return new  ResponseEntity<>(searchUsers,HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
 
     /**
      * Méthode qui gère les exceptions qui peuvent arriver dans les différentes couches
@@ -141,4 +187,13 @@ public class UserRestController {
         return "Error";
 
     }
+
+    private User getUserFromAuthentication(Authentication authentication){
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = new User();
+        user.setPseudo(userDetails.getUsername());
+        return userService.getUserByMailOrPseudo(user);
+    }
+
+
 }

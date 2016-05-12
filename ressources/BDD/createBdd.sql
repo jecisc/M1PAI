@@ -1,6 +1,4 @@
--- I am a script to create the database
-
-/* We can't use this with alwaysdata.
+/* We can't use this with alwaysdata.*/
 CREATE DATABASE "M1PAI"
   WITH OWNER = postgres
   ENCODING = 'UTF8'
@@ -8,7 +6,8 @@ CREATE DATABASE "M1PAI"
   LC_COLLATE = 'French_France.1252'
   LC_CTYPE = 'French_France.1252'
   CONNECTION LIMIT = -1;
-*/
+
+
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -104,13 +103,17 @@ ALTER SEQUENCE event_id_seq OWNED BY EVENT.idEvent;
 -- areFriend
 
 CREATE TABLE AREFRIEND (
-  firend1      INTEGER REFERENCES APPLIUSER (idUser),
+  friend1      INTEGER REFERENCES APPLIUSER (idUser),
   friend2      INTEGER REFERENCES APPLIUSER (idUser),
-  accepted     BOOLEAN NOT NULL,
-  friendAsking INTEGER REFERENCES APPLIUSER (idUser),
-  PRIMARY KEY (firend1, friend2)
+  PRIMARY KEY (friend1, friend2)
 );
 
+
+CREATE TABLE ASKFRIEND (
+  asker INTEGER REFERENCES APPLIUSER(idUser),
+  friend INTEGER REFERENCES APPLIUSER(idUser),
+  PRIMARY KEY (friend,asker)
+);
 -- participate
 
 CREATE TABLE PARTICIPATE (
@@ -136,11 +139,3 @@ CREATE TABLE PROVIDED (
   provided  INTEGER NOT NULL,
   PRIMARY KEY (appliuser, ressource)
 );
-
-
-
-
-
-
-
-
