@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.List;
 
 
 /**
@@ -121,16 +122,16 @@ public class UserRestController {
     }
 
     @RequestMapping(value="/friends", method= RequestMethod.GET)
-    public ResponseEntity<User> getFriends(Authentication authentication){
+    public ResponseEntity<List<User>> getFriends(Authentication authentication){
 
         User user=getUserFromAuthentication(authentication);
 
         user=userService.getAllFriends(user.getId());
 
         if(user!=null)
-            return new  ResponseEntity<User>(user,HttpStatus.OK);
+            return new  ResponseEntity<List<User>>(user.getFriends(),HttpStatus.OK);
 
-        return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<List<User>>(user.getFriends(),HttpStatus.BAD_REQUEST);
     }
 
 
@@ -144,6 +145,20 @@ public class UserRestController {
 
         return new ResponseEntity<User>(user,HttpStatus.BAD_REQUEST);
     }
+
+    @RequestMapping(value="/search",params = {"size","page","name"},method= RequestMethod.GET)
+    public ResponseEntity<List<User>> searchUser(Authentication authentication,@RequestParam("size") int size,@RequestParam("page") int page,@RequestParam("name") String name){
+
+        User user=getUserFromAuthentication(authentication);
+
+        List<User> searchUsers=userService.searchUser(name,page,size);
+
+        if(searchUsers!=null)
+            return new  ResponseEntity<List<User>>(searchUsers,HttpStatus.OK);
+
+        return new ResponseEntity<List<User>>(HttpStatus.BAD_REQUEST);
+    }
+
 
     /**
      * Méthode qui gère les exceptions qui peuvent arriver dans les différentes couches
@@ -167,4 +182,6 @@ public class UserRestController {
 
         return user;
     }
+
+
 }

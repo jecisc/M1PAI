@@ -44,7 +44,7 @@ public class UserManagerTest {
         user.setActive(false);
     }
 
-    @Test
+  /*  @Test
     public void createUser(){
 
         user.setPassword("Password59");
@@ -131,7 +131,7 @@ public class UserManagerTest {
         assertNotNull(userList);
 
     }
-
+*/
    /* @Test
     public void deleteFriendById(){
         user.setPseudo("vmargerin");
@@ -139,11 +139,17 @@ public class UserManagerTest {
         userManager.deleteFriend(user,5);
     }*/
 
-    @Test
+  /*  @Test
     public void getFriendsById(){
         user=userManager.getAllFriends(1);
         assertEquals(3,user.getFriends().size());
 
+    }
+*/
+    @Test
+    public void searchUsersByName(){
+        List<User> users=userManager.searchUser("p",0,1);
+        assertNotNull(users);
     }
 
   /*  @Test

@@ -3,7 +3,10 @@ package com.partinizer.business.manager;
 import com.partinizer.data.entity.User;
 import com.partinizer.data.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.mail.*;
@@ -87,6 +90,13 @@ public class UserManager {
 
     }
 
+
+    public List<User>searchUser(String name,int page, int size){
+        List<User> users=userRepository.findByNameStartingWithOrderByName(name,new PageRequest(page,size));
+
+        return users;
+    }
+
     /**
      * Get a User entity by his mail or his pseudo
      *
@@ -167,6 +177,7 @@ public class UserManager {
      * @return
      *      true if delete works, false if not
      */
+    @Transactional
     public boolean deleteFriend(User user,long idFriend){
 
         if(validUser(user)){
@@ -174,6 +185,7 @@ public class UserManager {
             User friend=userRepository.getOne(idFriend);
             if(friend!=null){
                 userRepository.deleteFriend(user.getId(),idFriend);
+                userRepository.deleteFriend(idFriend,user.getId());
                 return true;
             }
         }
@@ -182,6 +194,35 @@ public class UserManager {
         return false;
     }
 
+    @Transactional
+    public boolean addFriend(User user,long idFriend){
+
+
+            //Check if friend user exist
+            User friend=userRepository.getOne(idFriend);
+            //Check if friendRequest exist
+            if(friend!=null && checkFriendRequestExist(user,idFriend)){
+                userRepository.addFriend(user.getId(),idFriend);
+                userRepository.addFriend(idFriend,user.getId());
+                userRepository.deleteFriendRequest(user.getId(),idFriend);
+                return true;
+            }
+
+
+
+        return false;
+    }
+
+    public boolean deleteFriendRequest(User user, long idFriend){
+
+        User friend=userRepository.getOne(idFriend);
+        //Check if friendRequest exist
+        if(friend!=null && checkFriendRequestExist(user,idFriend)){
+            userRepository.deleteFriendRequest(user.getId(),idFriend);
+            return true;
+        }
+        return false;
+    }
 
     private boolean validUser(User user) {
 
@@ -273,5 +314,22 @@ public class UserManager {
 
     public User getUserByMail(String mail) {
         return this.userRepository.findByMail(mail);
+    }
+
+    /**
+     * Check if the friendRequest among the list
+     * @param user
+     * @param idFriend
+     * @return
+     *      true if exist, false if not
+     */
+    private boolean checkFriendRequestExist(User user,long idFriend){
+        for(User friendRequest: user.getFriendRequest()){
+            if(friendRequest.getId()==idFriend){
+                return true;
+            }
+        }
+
+        return false;
     }
 }
