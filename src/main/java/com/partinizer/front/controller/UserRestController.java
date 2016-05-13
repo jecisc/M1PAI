@@ -40,18 +40,21 @@ public class UserRestController {
      */
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public ResponseEntity<User> update(Authentication authentication,@RequestBody User userUpdate){
-
-        User user=getUserFromAuthentication(authentication);
-
-        if(userUpdate!=null && userUpdate.getId()!=0 && userUpdate.getId()==user.getId()){
-            try {
-                return new ResponseEntity<>(userService.updateUser(userUpdate,user),HttpStatus.OK);
-            } catch (WrongInformationException e) {
-                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        //TODO I'm sure this can be improve a little
+        try {
+            User user = getUserFromAuthentication(authentication);
+            if(userUpdate!=null && userUpdate.getId()!=0 && userUpdate.getId()==user.getId()){
+                try {
+                    return new ResponseEntity<>(userService.updateUser(userUpdate,user),HttpStatus.OK);
+                } catch (WrongInformationException e) {
+                    return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+                }
             }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     /**Méthode de création d'un utilisateur basé sur une requête HTTP POST**/
@@ -86,9 +89,8 @@ public class UserRestController {
     @RequestMapping(value = "/validation", method = RequestMethod.GET)
     public ResponseEntity<String> validateUser(@RequestParam(value = "mail", defaultValue = "") String mail, @RequestParam(value = "cle", defaultValue = "0") String hash) {
 
-        User user;
         try {
-            user = this.userService.getUserByMail(mail);
+            User user = this.userService.getUserByMail(mail);
             if (mail.hashCode() == Integer.valueOf(hash) && this.userService.validateUserSubscription(user)) {
                 return new ResponseEntity<>("Votre validation a bien été effectuée.", HttpStatus.ACCEPTED);
             }
@@ -138,39 +140,50 @@ public class UserRestController {
     @RequestMapping(value="/friends", method= RequestMethod.GET)
     public ResponseEntity<List<User>> getFriends(Authentication authentication){
 
-        User user=getUserFromAuthentication(authentication);
-
-        user=userService.getAllFriends(user.getId());
-
-        if(user!=null)
+        try {
+            User user = getUserFromAuthentication(authentication);
+            user = userService.getAllFriends(user.getId()); //TODO This is really weird. I should take a look later to understand what is going on
             return new  ResponseEntity<>(user.getFriends(),HttpStatus.OK);
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<>(user.getFriends(),HttpStatus.BAD_REQUEST);
     }
 
 
     @RequestMapping(value="/friends/delete/{idFriend}",method=RequestMethod.DELETE)
     public ResponseEntity<User> deleteFriend(Authentication authentication,@PathVariable("idFriend") long idFriend){
 
-        User user=getUserFromAuthentication(authentication);
+        try {
+            User user = getUserFromAuthentication(authentication);
 
-        if(userService.deleteFriend(user,idFriend))
-            return new  ResponseEntity<>(user,HttpStatus.OK);
+            if(userService.deleteFriend(user,idFriend)){ //TODO instead of a Boolean this method should through an error.
+                return new  ResponseEntity<>(user,HttpStatus.OK);
+            }
 
-        return new ResponseEntity<>(user,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(user,HttpStatus.BAD_REQUEST);
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 
     @RequestMapping(value="/search",params = {"size","page","name"},method= RequestMethod.GET)
     public ResponseEntity<List<User>> searchUser(Authentication authentication,@RequestParam("size") int size,@RequestParam("page") int page,@RequestParam("name") String name){
 
-        User user=getUserFromAuthentication(authentication);
+        try {
+            User user = getUserFromAuthentication(authentication);
 
-        List<User> searchUsers=userService.searchUser(name,page,size);
+            List<User> searchUsers = userService.searchUser(name,page,size);
 
-        if(searchUsers!=null)
-            return new  ResponseEntity<>(searchUsers,HttpStatus.OK);
+            if(searchUsers!=null) //TODO this should not be null. The previous method should raise an error if it fail.
+                return new  ResponseEntity<>(searchUsers,HttpStatus.OK);
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 
@@ -188,11 +201,8 @@ public class UserRestController {
 
     }
 
-    private User getUserFromAuthentication(Authentication authentication){
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = new User();
-        user.setPseudo(userDetails.getUsername());
-        return userService.getUserByMailOrPseudo(user);
+    public User getUserFromAuthentication(Authentication authentication) throws UserDoesNotExistException {
+        return userService.getUserByPseudo(((UserDetails) authentication.getPrincipal()).getUsername());
     }
 
 

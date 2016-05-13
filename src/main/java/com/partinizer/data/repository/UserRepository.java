@@ -1,6 +1,5 @@
 package com.partinizer.data.repository;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,8 +17,6 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 
-    //TODO see same method comment on UserService
-    User findByMailOrPseudo(String mail,String pseudo);
     User findByMail(String mail);
     User findByPseudo(String pseudo);
     List<User> findByPseudoStartingWith(String pseudo);

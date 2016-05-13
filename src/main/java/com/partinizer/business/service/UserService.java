@@ -32,16 +32,6 @@ public class UserService {
          return userManager.createUser(user);
     }
 
-    public User getUserByMailOrPseudo(User user){
-        //TODO
-        // This should be remove later.
-        // Getting something by pseudo OR mail is a bad idea because we should know what information we have.
-        // And more, this return null if there is no user.
-        // Null management is bad and should be replace by errors or null object pattern.
-        return userManager.getUserByMailOrPseudo(user);
-
-    }
-
     public User getAllFriends(long id){
         return userManager.getAllFriends(id);
     }

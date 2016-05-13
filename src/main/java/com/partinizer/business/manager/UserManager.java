@@ -77,53 +77,13 @@ public class UserManager {
         this.userMailIsFree(user.getMail());
     }
 
-
-    /**
-     * Get a User entity by his id
-     *
-     * @param user
-     * @return The User obtained or null if not
-     */
-    public User getUser(User user) {
-        //TODO
-        // This should be improve.
-        // Null management is not right in OO programming.
-        // Else we should use error of null object pattern.
-        if (validUser(user)) {
-
-            return userRepository.findOne(user.getId());
-
-        }
-
-        return null;
-    }
-
     public User getAllFriends(long id) {
         return userRepository.getFriendsById(id);
     }
 
 
     public List<User> searchUser(String name, int page, int size) {
-        List<User> users = userRepository.findByNameStartingWithOrderByName(name, new PageRequest(page, size));
-
-        return users;
-    }
-
-    /**
-     * Get a User entity by his mail or his pseudo
-     *
-     * @param user
-     * @return The user obtained or null if not
-     */
-    public User getUserByMailOrPseudo(User user) {
-        //TODO see same method comment on UserService
-        if (user != null && (user.getMail() != null && !user.getMail().equals("")) ||
-                (user.getPseudo() != null && !user.getPseudo().equals(""))) {
-            return userRepository.findByMailOrPseudo(user.getMail(), user.getPseudo());
-
-        }
-
-        return null;
+        return userRepository.findByNameStartingWithOrderByName(name, new PageRequest(page, size));
     }
 
     /**
@@ -135,31 +95,6 @@ public class UserManager {
     public Boolean validateUserSubscription(User user) {
         user.setActive(true);
         return (this.userRepository.save(user)).isActive();
-    }
-
-    public List<User> findByPseudo(String pseudo) {
-        return userRepository.findByPseudoStartingWith(pseudo);
-    }
-
-
-    /**
-     * Delete a User by his Id
-     *
-     * @param user
-     * @return The User deleted or null if not
-     */
-    public User deleteUser(User user) {
-        //TODO
-        // This should be improve.
-        // Null management is not right in OO programming.
-        // Else we should use error of null object pattern.
-        if (validUser(user) && userExist(user)) {
-            userRepository.delete(user);
-
-            return user;
-        }
-
-        return null;
     }
 
     /**
@@ -211,8 +146,7 @@ public class UserManager {
     }
 
     @Transactional
-    public boolean addFriend(User user, long idFriend) {
-
+    public Boolean addFriend(User user, long idFriend) {
 
         //Check if friend user exist
         User friend = userRepository.getOne(idFriend);
@@ -224,11 +158,10 @@ public class UserManager {
             return true;
         }
 
-
         return false;
     }
 
-    public boolean deleteFriendRequest(User user, long idFriend) {
+    public Boolean deleteFriendRequest(User user, long idFriend) {
 
         User friend = userRepository.getOne(idFriend);
         //Check if friendRequest exist
@@ -242,12 +175,6 @@ public class UserManager {
     private boolean validUser(User user) {
 
         return user != null && user.getId() != 0;
-    }
-
-
-    private boolean userExist(User user) {
-
-        return getUser(user) != null;
     }
 
     /**
@@ -322,8 +249,9 @@ public class UserManager {
         }
     }
 
-    private void checkAvatar(String avatar) {
+    public void checkAvatar(String avatar) {
         //return avatar!=null;
+        //TODO
     }
 
     /**
@@ -478,7 +406,7 @@ public class UserManager {
      * @return A boolean to know if everything went fine.
      * @throws MessagingException raised if there is a problem with the mail.
      */
-    public boolean generateNewPasswordFor(User user) throws MessagingException {
+    public Boolean generateNewPasswordFor(User user) throws MessagingException {
         String newPW = this.generateNewPassword();
         this.sendMailTo(user, "Partinizer - Nouveau Mot de Passe", this.resetPasswordMailContentFor(newPW));
         user.setPassword(newPW);
@@ -510,7 +438,7 @@ public class UserManager {
      * @param idFriend
      * @return true if exist, false if not
      */
-    private boolean checkFriendRequestExist(User user, long idFriend) {
+    public Boolean checkFriendRequestExist(User user, long idFriend) {
         for (User friendRequest : user.getFriendRequest()) {
             if (friendRequest.getId() == idFriend) {
                 return true;

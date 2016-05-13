@@ -1,5 +1,6 @@
 package com.partinizer.front.controller;
 
+import com.partinizer.business.exceptions.UserDoesNotExistException;
 import com.partinizer.business.service.UserService;
 import com.partinizer.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,22 +29,32 @@ public class FriendRequestController {
 
     @RequestMapping(value = "/accept/{idFriend}", method= RequestMethod.GET)
     public ResponseEntity<String> accept(Authentication authentication,@PathVariable("idFriend") long idFriend){
-        User user=getUserFromAuthentication(authentication);
 
-        if(userService.addFriend(user,idFriend)){
-            return  new ResponseEntity<>("", HttpStatus.OK);
+        try {
+            User user = getUserFromAuthentication(authentication);
+            if(userService.addFriend(user,idFriend)){ //TODO remove the if and return an error at a lower level if there is a problem
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return   new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
+
     }
 
     @RequestMapping(value = "/deny/{idFriend}", method= RequestMethod.GET)
     public ResponseEntity<String> deny(Authentication authentication,@PathVariable("idFriend") long idFriend){
-        User user=getUserFromAuthentication(authentication);
 
-        if(userService.denyFriendRequest(user,idFriend)){
-            return  new ResponseEntity<>("", HttpStatus.OK);
+        try {
+            User user = getUserFromAuthentication(authentication);
+            if(userService.denyFriendRequest(user,idFriend)){ //TODO remove the if and return an error at a lower level if there is a problem
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return   new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
+
     }
 
     /**
@@ -55,19 +66,19 @@ public class FriendRequestController {
     @RequestMapping(value = "/get", method= RequestMethod.GET)
     public ResponseEntity<List<User>> getFriendRequest(Authentication authentication){
 
-        User user=getUserFromAuthentication(authentication);
-
-        if(user!=null && user.getFriends()!=null){
-            return  new ResponseEntity<>(user.getFriendRequest(), HttpStatus.OK);
+        try {
+            User user = getUserFromAuthentication(authentication);
+            if(user.getFriends()!=null){ //TODO getFriends should not be able to return null but raise an error if there is a problem
+                return new ResponseEntity<>(user.getFriendRequest(), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return   new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
     }
 
-
-    private User getUserFromAuthentication(Authentication authentication){
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = new User();
-        user.setPseudo(userDetails.getUsername());
-        return userService.getUserByMailOrPseudo(user);
+    public User getUserFromAuthentication(Authentication authentication) throws UserDoesNotExistException {
+        return userService.getUserByPseudo(((UserDetails) authentication.getPrincipal()).getUsername());
     }
 }
