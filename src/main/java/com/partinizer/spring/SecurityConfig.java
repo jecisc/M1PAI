@@ -29,6 +29,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated().and()
                 .httpBasic();
 
+        //TODO For now I let everything pass, let's retrain this later
+        http .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS,"/event/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/event/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/event/**").permitAll().and()
+                .authorizeRequests()
+                .anyRequest().authenticated().and()
+                .httpBasic();
+
        http.csrf().disable();
     }
 
