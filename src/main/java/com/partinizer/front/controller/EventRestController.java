@@ -22,8 +22,7 @@ public class EventRestController {
     public EventRestController(EventService eventService) {
         this.eventService = eventService;
     }
-    
-    @CrossOrigin
+
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ResponseEntity<String> update() {
 

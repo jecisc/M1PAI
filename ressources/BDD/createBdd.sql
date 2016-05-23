@@ -90,10 +90,8 @@ CREATE TABLE EVENT (
   idEvent      INTEGER PRIMARY KEY   NOT NULL DEFAULT nextval('event_id_seq' :: REGCLASS),
   name         CHARACTER VARYING(64) NOT NULL,
   emailCreator CHARACTER VARYING(64) NOT NULL,
-  dateBegin    DATE                  NOT NULL,
-  dateEnd      DATE,
-  hourBegin    TIME                  NOT NULL,
-  hourEnd      TIME,
+  dateBegin    TIMESTAMP             NOT NULL,
+  dateEnd      TIMESTAMP,
   description  CHARACTER VARYING(64) NOT NULL,
   place        CHARACTER VARYING(64) NOT NULL
 );

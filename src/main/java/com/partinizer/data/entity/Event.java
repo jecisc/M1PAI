@@ -4,7 +4,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
-import java.time.LocalTime;
 import java.util.Date;
 
 /**
@@ -25,22 +24,25 @@ public class Event {
     protected String name;
 
     //TODO remove this and reference the user instead of keeping his email
-    @Column(name = "emailcreator")
-    protected String emailCreator;
 
-    //TODO remove dateBeginning and hour beginning to use a localDateTime instead
-    @Column(name = "dateBegin")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(name = "appliuser", joinColumns = @JoinColumn(name = "email"), inverseJoinColumns = @JoinColumn(name = "emailcreator"))
+    protected User creator;
+
+    @Column(name = "datebegin")
     protected Date dateBeginning;
 
-    @Column(name = "hourbegin")
-    protected LocalTime hourBeginning;
-
-    //TODO remove dateBeginning and hour beginning to use a localDateTime instead
     @Column(name = "dateend")
     protected Date dateEnd;
 
-    @Column(name = "hourend")
-    protected LocalTime hourEnd;
+
+    public Date getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
+    }
 
     @Column(name = "description")
     protected String description;
@@ -65,44 +67,12 @@ public class Event {
         this.name = name;
     }
 
-    public String getEmailCreator() {
-        return emailCreator;
+    public User getCreator() {
+        return creator;
     }
 
-    public void setEmailCreator(String emailCreator) {
-        this.emailCreator = emailCreator;
-    }
-
-    public Date getDateBeginning() {
-        return dateBeginning;
-    }
-
-    public void setDateBeginning(Date dateBeginning) {
-        this.dateBeginning = dateBeginning;
-    }
-
-    public LocalTime getHourBeginning() {
-        return hourBeginning;
-    }
-
-    public void setHourBeginning(LocalTime hourBeginning) {
-        this.hourBeginning = hourBeginning;
-    }
-
-    public Date getDateEnd() {
-        return dateEnd;
-    }
-
-    public void setDateEnd(Date dateEnd) {
-        this.dateEnd = dateEnd;
-    }
-
-    public LocalTime getHourEnd() {
-        return hourEnd;
-    }
-
-    public void setHourEnd(LocalTime hourEnd) {
-        this.hourEnd = hourEnd;
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 
     public String getDescription() {
@@ -111,6 +81,14 @@ public class Event {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Date getDateBeginning() {
+        return dateBeginning;
+    }
+
+    public void setDateBeginning(Date dateBeginning) {
+        this.dateBeginning = dateBeginning;
     }
 
     public String getLocalisation() {
