@@ -81,9 +81,24 @@ public class UserManager {
         return userRepository.getFriendsById(id);
     }
 
+    public User getAllFriendRequests(long id){
+        return userRepository.getFriendRequestById(id);
+    }
 
-    public List<User> searchUser(String name, int page, int size) {
-        return userRepository.findByNameStartingWithOrderByName(name, new PageRequest(page, size));
+    public List<User> searchUser(User user,String pseudo, int page, int size) {
+        List<User> list= userRepository.findByPseudoStartingWithOrderByPseudo(pseudo, new PageRequest(page, size));
+        list.removeAll(user.getFriends());
+        list.remove(user);
+        return  list;
+    }
+
+    /**
+     * I return the number of result on searching users filter by pseudo
+     * @param pseudoFilter The filter of search
+     * @return The number of result
+     */
+    public int getNumberOfUsersFilterByPseudo(String pseudoFilter){
+        return userRepository.countByPseudoStartingWith(pseudoFilter);
     }
 
     /**
@@ -158,6 +173,18 @@ public class UserManager {
             return true;
         }
 
+        return false;
+    }
+
+    public Boolean addFriendRequest(User user, long idFriend){
+        //TODO Add Exception
+
+        //Check if friend user exist
+        User friend = userRepository.getOne(idFriend);
+        if (friend != null){
+            userRepository.addFriendRequest(user.getId(),idFriend);
+            return true;
+        }
         return false;
     }
 

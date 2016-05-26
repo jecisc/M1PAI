@@ -183,10 +183,17 @@ public class UserManagerTest {
 
     }
 */
-    @Test
+   /* @Test
     public void searchUsersByName(){
         List<User> users=userManager.searchUser("p",0,1);
         assertNotNull(users);
+    }*/
+
+    @Test
+    public void getFriendRequestById(){
+
+       User user_= userManager.getAllFriendRequests(3);
+        assertNotNull(user_.getFriendRequest());
     }
 
   /*  @Test

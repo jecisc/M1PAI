@@ -31,6 +31,13 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query(value="insert into arefriend values(?1,?2)",nativeQuery = true)
     void addFriend(long idUser,long idFriend);
 
+
+    @Transactional
+    @Modifying
+    @Query(value="insert into askfriend values(?1,?2)",nativeQuery = true)
+    void addFriendRequest(long idUser, long idFriend);
+
+
     @Transactional
     @Modifying
     @Query(value="delete from askfriend where asker=?2 and friend=?1",nativeQuery = true)
@@ -40,13 +47,20 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @EntityGraph(value="User.friends", type= EntityGraph.EntityGraphType.LOAD)
     User getFriendsById(long id);
 
+    @EntityGraph(value="User.friendRequest", type= EntityGraph.EntityGraphType.LOAD)
+    User getFriendRequestById(long id);
+
     /*@Query(value="select iduser,firstname,lastname from appliuser where firstname like ?1 limit 10 offset ?2",nativeQuery = true)
     List<User> searchUser(String name,int interval);*/
 
     /*@Query(value="select u.id, u.name, u.firstname from User u where u.firstname LIKE :name% limit 10 offset :interval " )
     List<User> searchUser(String name,int interval);*/
 
-    List<User> findByNameStartingWithOrderByName(String lastname, Pageable pageable);
+    List<User> findByPseudoStartingWithOrderByPseudo(String pseudo, Pageable pageable);
 
+    /*@Query(value="select count(pseudo) from appliuser where pseudo like '%?1'",nativeQuery = true)
+    int getNumberOfUsersFilterByPseudo(String pseudoFilter);*/
+
+    int countByPseudoStartingWith(String pseudoFilter);
 }
 

@@ -12,8 +12,12 @@ import java.util.List;
 
 @Entity
 @Table(name="appliuser")
-@NamedEntityGraph(name = "User.friends",
-        attributeNodes =@NamedAttributeNode( "friends"))
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "User.friends",
+                attributeNodes = @NamedAttributeNode("friends")),
+        @NamedEntityGraph(name = "User.friendRequest",
+                attributeNodes = @NamedAttributeNode("friendRequest"))
+})
 public class User {
 
     private static final long serialVersionUID = 1L;
@@ -54,7 +58,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "friend2"))
     private List<User> friends;
 
-    @OneToMany(fetch=FetchType.EAGER)
+    @OneToMany(fetch=FetchType.LAZY)
     @JoinTable(name="askfriend",joinColumns = @JoinColumn(name="friend"),
             inverseJoinColumns = @JoinColumn(name = "asker"))
     private List<User> friendRequest;

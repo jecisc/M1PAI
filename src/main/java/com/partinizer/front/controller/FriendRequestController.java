@@ -26,6 +26,20 @@ public class FriendRequestController {
         this.userService=userService;
     }
 
+    @RequestMapping(value = "/ask/{idFriend}", method= RequestMethod.GET)
+    public ResponseEntity<String> ask(Authentication authentication,@PathVariable("idFriend") long idFriend){
+
+        try {
+            User user = getUserFromAuthentication(authentication);
+            if(userService.addFriendRequest(user,idFriend)){ //TODO remove the if and return an error at a lower level if there is a problem
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
     @RequestMapping(value = "/accept/{idFriend}", method= RequestMethod.GET)
     public ResponseEntity<String> accept(Authentication authentication,@PathVariable("idFriend") long idFriend){
@@ -69,7 +83,7 @@ public class FriendRequestController {
         try {
             User user = getUserFromAuthentication(authentication);
             if(user.getFriends()!=null){ //TODO getFriends should not be able to return null but raise an error if there is a problem
-                return new ResponseEntity<>(user.getFriendRequest(), HttpStatus.OK);
+                return new ResponseEntity<>(userService.getAllFriendRequest(user.getId()).getFriendRequest(), HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (UserDoesNotExistException e) {

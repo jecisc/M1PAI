@@ -32,8 +32,22 @@ public class UserService {
          return userManager.createUser(user);
     }
 
+    /**
+     * I return the number of result on searching users filter by pseudo
+     * @param pseudoFilter The filter of search
+     * @return The number of result
+     */
+    public int getNumberOfUsersFilterByPseudo(String pseudoFilter){
+        return userManager.getNumberOfUsersFilterByPseudo(pseudoFilter);
+    }
+
+
     public User getAllFriends(long id){
         return userManager.getAllFriends(id);
+    }
+
+    public User getAllFriendRequest(long id){
+        return userManager.getAllFriendRequests(id);
     }
 
     /**
@@ -76,8 +90,8 @@ public class UserService {
         return this.userManager.generateNewPasswordFor(user);
     }
 
-    public List<User> searchUser(String name,int page, int size){
-        return userManager.searchUser(name,page,size);
+    public List<User> searchUser(User user,String pseudo,int page, int size){
+        return userManager.searchUser(user,pseudo,page,size);
     }
 
     public boolean deleteFriend(User user, long idFriend){
@@ -87,6 +101,11 @@ public class UserService {
     public boolean addFriend(User user,long idFriend) {return userManager.addFriend(user,idFriend);}
 
     public boolean denyFriendRequest(User user,long idFriend){return userManager.deleteFriendRequest(user,idFriend);}
+
+    //TODO catch exception
+    public boolean addFriendRequest(User user,long idFriend){
+        return userManager.addFriendRequest(user,idFriend);
+    }
 
     public User updateUser(User userUpdate,User userAuthenticate) throws WrongInformationException {
         return userManager.updateUser(userUpdate,userAuthenticate);
