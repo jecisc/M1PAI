@@ -25,8 +25,8 @@ public class Event {
 
     //TODO remove this and reference the user instead of keeping his email
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "appliuser", joinColumns = @JoinColumn(name = "email"), inverseJoinColumns = @JoinColumn(name = "emailcreator"))
+    @OneToOne
+    @JoinColumn(name = "iduser")
     protected User creator;
 
     @Column(name = "datebegin")

@@ -89,7 +89,7 @@ CACHE 1;
 CREATE TABLE EVENT (
   idEvent      INTEGER PRIMARY KEY   NOT NULL DEFAULT nextval('event_id_seq' :: REGCLASS),
   name         CHARACTER VARYING(64) NOT NULL,
-  emailCreator CHARACTER VARYING(64) NOT NULL,
+  iduser       INTEGER               NOT NULL,
   dateBegin    TIMESTAMP             NOT NULL,
   dateEnd      TIMESTAMP,
   description  CHARACTER VARYING(64) NOT NULL,
