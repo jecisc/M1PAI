@@ -169,19 +169,41 @@ public class UserRestController {
 
     }
 
-    @RequestMapping(value="/search",params = {"size","page","name"},method= RequestMethod.GET)
-    public ResponseEntity<List<User>> searchUser(Authentication authentication,@RequestParam("size") int size,@RequestParam("page") int page,@RequestParam("name") String name){
+    @RequestMapping(value="/search",params = {"size","page","pseudo"},method= RequestMethod.GET)
+    public ResponseEntity<List<User>> searchUser(Authentication authentication,@RequestParam("size") int size,@RequestParam("page") int page,@RequestParam("pseudo") String pseudo){
+
+        try {
+
+            if(pseudo.isEmpty()){
+                return new  ResponseEntity<>(HttpStatus.OK);
+            }
+            else {
+                User user = getUserFromAuthentication(authentication);
+
+                List<User> searchUsers = userService.searchUser(user, pseudo, page - 1, size);
+
+                if (searchUsers != null) //TODO this should not be null. The previous method should raise an error if it fail.
+                    return new ResponseEntity<>(searchUsers, HttpStatus.OK);
+
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value="/getNumberOfUsersFilterByPseudo",params = {"pseudoFilter"},method= RequestMethod.GET)
+    public ResponseEntity<String> searchUser(Authentication authentication,@RequestParam("pseudoFilter") String pseudoFilter){
 
         try {
             User user = getUserFromAuthentication(authentication);
+            int result=userService.getNumberOfUsersFilterByPseudo(pseudoFilter);
+            JSONObject jsonWriter = new JSONObject();
+            jsonWriter.put("result",result);
+            return new ResponseEntity<>(jsonWriter.toJSONString(),HttpStatus.OK);
 
-            List<User> searchUsers = userService.searchUser(name,page,size);
-
-            if(searchUsers!=null) //TODO this should not be null. The previous method should raise an error if it fail.
-                return new  ResponseEntity<>(searchUsers,HttpStatus.OK);
-
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (UserDoesNotExistException e) {
+            //return new ResponseEntity<>(userService.getNumberOfUsersFilterByPseudo(pseudoFilter),HttpStatus.OK);
+        }catch (UserDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
