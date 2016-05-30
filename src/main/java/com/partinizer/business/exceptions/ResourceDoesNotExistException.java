@@ -1,9 +1,9 @@
 package com.partinizer.business.exceptions;
 
 /**
- * I am an exception raised when an event could not be found in the database.
+ * I am an exception raised when a resource could not be found in the database.
  */
-public class EventDoesNotExistException extends Exception {
+public class ResourceDoesNotExistException extends Exception {
 
     protected Long id;
 
