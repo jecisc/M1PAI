@@ -23,8 +23,6 @@ public class Event {
     @Column(name = "name")
     protected String name;
 
-    //TODO remove this and reference the user instead of keeping his email
-
     @OneToOne
     @JoinColumn(name = "iduser")
     protected User creator;
