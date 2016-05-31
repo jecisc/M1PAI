@@ -24,4 +24,6 @@ public class CategoryManager {
     public Category getCategoryById(long id){
         return categoryRepository.findOne(id);
     }
+
+    public List<Category> getAllCategory(){return categoryRepository.findAll();}
 }
