@@ -27,7 +27,7 @@ public class EventManager {
      * @throws EventDoesNotExistException raised of there is no event with this id.
      */
     public Event getEventById(Long id) throws EventDoesNotExistException {
-        Event event = this.eventRepository.findById(id);
+        Event event = this.eventRepository.findOne(id);
         if (event == null) {
             EventDoesNotExistException exception = new EventDoesNotExistException();
             exception.setId(id);
