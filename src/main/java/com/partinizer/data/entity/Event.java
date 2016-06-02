@@ -4,7 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.*;
 
 /**
  * TODO
@@ -18,7 +18,7 @@ public class Event {
     @GenericGenerator(name = "UserIdGenerator", strategy = "sequence",
             parameters = {@Parameter(name = "sequence", value = "event_id_seq")})
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UserIdGenerator")
-    protected long id;
+    protected Long id;
 
     @Column(name = "name")
     protected String name;
@@ -33,6 +33,23 @@ public class Event {
     @Column(name = "dateend")
     protected Date dateEnd;
 
+    @Column(name = "description")
+    protected String description;
+
+    @Column(name = "place")
+    protected String localisation;
+
+    @OneToMany(fetch=FetchType.LAZY)
+    @JoinColumn(name="event")
+    protected List<Needed> neededs;
+
+    public List<Needed> getNeededs() {
+        return neededs;
+    }
+
+    public void setNeededs(List<Needed> neededs) {
+        this.neededs = neededs;
+    }
 
     public Date getDateEnd() {
         return dateEnd;
@@ -41,13 +58,6 @@ public class Event {
     public void setDateEnd(Date dateEnd) {
         this.dateEnd = dateEnd;
     }
-
-    @Column(name = "description")
-    protected String description;
-
-    @Column(name = "place")
-    protected String localisation;
-
 
     public long getId() {
         return id;
