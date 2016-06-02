@@ -26,6 +26,9 @@ public class Category {
     @Column(name="designation")
     private String designation;
 
+    @Column(name = "icon")
+    byte[] icon;
+
     @OneToMany(fetch=FetchType.EAGER)
     @JoinColumn(name="category")
     protected List<Resource> resources;
@@ -52,5 +55,13 @@ public class Category {
 
     public void setIdCategory(long idCategory) {
         this.idCategory = idCategory;
+    }
+
+    public byte[] getIcon() {
+        return icon;
+    }
+
+    public void setIcon(byte[] icon) {
+        this.icon = icon;
     }
 }

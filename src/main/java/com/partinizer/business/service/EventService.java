@@ -29,4 +29,5 @@ public class EventService {
     public Event getEventById(Long id) throws EventDoesNotExistException {
         return eventManager.getEventById(id);
     }
+
 }
