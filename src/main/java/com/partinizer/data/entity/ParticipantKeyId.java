@@ -1,5 +1,7 @@
 package com.partinizer.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -13,6 +15,7 @@ public class ParticipantKeyId implements Serializable{
 
     @OneToOne
     @JoinColumn(name = "event")
+    @JsonIgnore
     protected Event event;
 
     @OneToOne

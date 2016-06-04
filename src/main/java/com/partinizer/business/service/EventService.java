@@ -5,6 +5,9 @@ import com.partinizer.business.manager.EventManager;
 import com.partinizer.data.entity.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
+
+import java.util.List;
 
 /**
  * TODO
@@ -30,4 +33,7 @@ public class EventService {
         return eventManager.getEventById(id);
     }
 
+    public List<Event> getAllEvents() {
+        return this.eventManager.getAllEvents();
+    }
 }

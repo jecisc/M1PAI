@@ -6,6 +6,8 @@ import com.partinizer.data.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * TODO
  */
@@ -34,5 +36,9 @@ public class EventManager {
             throw exception;
         }
         return event;
+    }
+
+    public List<Event> getAllEvents() {
+        return this.eventRepository.findAll();
     }
 }

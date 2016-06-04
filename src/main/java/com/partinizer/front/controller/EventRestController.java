@@ -3,14 +3,11 @@ package com.partinizer.front.controller;
 import com.partinizer.business.exceptions.EventDoesNotExistException;
 import com.partinizer.business.service.EventService;
 import com.partinizer.business.service.ResourceService;
-import com.partinizer.data.entity.Category;
+import com.partinizer.data.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,21 +27,50 @@ public class EventRestController {
         this.resourceService=resourceService;
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ResponseEntity<String> update() {
+    @CrossOrigin
+    @RequestMapping(value = "/events", method=RequestMethod.GET)
+    public ResponseEntity<List<Event>> getAllEvents() {
 
-
-        System.out.println("test");
-
-        try {
-            this.eventService.getEventById(Long.valueOf("1"));
-        } catch (EventDoesNotExistException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return new ResponseEntity<>(eventService.getAllEvents(),HttpStatus.OK);
 
     }
+
+    @CrossOrigin
+    @RequestMapping(value = "/{ifEvent}", method=RequestMethod.GET)
+    public ResponseEntity<Event> getEventOfId(@PathVariable("idEvent") Long idEvent) {
+
+        try {
+            return new ResponseEntity<>(eventService.getEventById(idEvent),HttpStatus.OK);
+        } catch (EventDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/resources/{idEvent}", method=RequestMethod.GET)
+    public ResponseEntity<List<Needed>> getResourceOf(@PathVariable("idEvent") Long idEvent) {
+
+        try {
+            return new ResponseEntity<>(eventService.getEventById(idEvent).getNeededs(),HttpStatus.OK);
+        } catch (EventDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/participants/{idEvent}", method=RequestMethod.GET)
+    public ResponseEntity<List<Participant>> getParticipantsOf(@PathVariable("idEvent") Long idEvent) {
+
+        try {
+            return new ResponseEntity<>(eventService.getEventById(idEvent).getParticipants(),HttpStatus.OK);
+        } catch (EventDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 
     @RequestMapping(value = "/getAllResources", method = RequestMethod.GET)
     public ResponseEntity<List<Category>> getAllRessources(){
