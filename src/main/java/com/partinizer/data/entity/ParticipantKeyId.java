@@ -6,26 +6,18 @@ import javax.persistence.OneToOne;
 import java.io.Serializable;
 
 /**
- * Created by Cyril on 02/06/2016.
+ * Created by Cyril on 04/06/2016.
  */
 @Embeddable
-public class NeededKeyId implements Serializable{
+public class ParticipantKeyId implements Serializable{
 
     @OneToOne
     @JoinColumn(name = "event")
     protected Event event;
 
     @OneToOne
-    @JoinColumn(name = "ressource")
-    protected Resource resource;
-
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
+    @JoinColumn(name = "appliuser")
+    protected User user;
 
     public Event getEvent() {
         return event;
@@ -33,5 +25,13 @@ public class NeededKeyId implements Serializable{
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
