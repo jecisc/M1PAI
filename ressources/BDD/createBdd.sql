@@ -54,7 +54,8 @@ CACHE 1;
 
 CREATE TABLE CATEGORY (
   idCategory  INTEGER PRIMARY KEY   NOT NULL DEFAULT nextval('category_id_seq' :: REGCLASS),
-  designation CHARACTER VARYING(64) NOT NULL
+  designation CHARACTER VARYING(64) NOT NULL,
+  icon  BYTEA NOT NULL
 );
 
 ALTER SEQUENCE category_id_seq OWNED BY CATEGORY.idCategory;
@@ -71,7 +72,7 @@ CACHE 1;
 CREATE TABLE RESSOURCE (
   idRessource INTEGER PRIMARY KEY   NOT NULL DEFAULT nextval('ressource_id_seq' :: REGCLASS),
   name        CHARACTER VARYING(64) NOT NULL,
-  icon        CHARACTER VARYING(64) NOT NULL,
+  icon        BYTEA NOT NULL,
   category INTEGER REFERENCES CATEGORY (idCategory)
 );
 
@@ -131,6 +132,7 @@ CREATE TABLE NEEDED (
 );
 -- Provided
 
+--add event link
 CREATE TABLE PROVIDED (
   appliuser INTEGER REFERENCES APPLIUSER (idUser),
   ressource INTEGER REFERENCES RESSOURCE (idRessource),
