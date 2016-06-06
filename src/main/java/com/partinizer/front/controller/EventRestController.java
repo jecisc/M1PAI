@@ -36,7 +36,7 @@ public class EventRestController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/{ifEvent}", method=RequestMethod.GET)
+    @RequestMapping(value = "/{idEvent}", method=RequestMethod.GET)
     public ResponseEntity<Event> getEventOfId(@PathVariable("idEvent") Long idEvent) {
 
         try {
