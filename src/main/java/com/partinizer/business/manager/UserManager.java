@@ -314,14 +314,18 @@ public class UserManager {
      * @throws MessagingException raised if there is a problem.
      */
     public void sendMailTo(User aUser, String title, String content) throws MessagingException {
-        Properties props = new Properties();
-        props.put("mail.smtp.host", UserManager.HOST);
-        props.put("mail.smtp.port", UserManager.PORT);
-        props.put("mail.smtp.ssl.enable", true);
-        props.put("mail.smtp.auth", true);
 
         String username = UserManager.USERNAME;
         String password = UserManager.PASSWORD;
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", UserManager.HOST);
+        props.put("mail.smtp.port", UserManager.PORT);
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.starttls.enable","true");
+        props.setProperty("mail.smtp.user", username);
+        props.setProperty("mail.smtp.password", password);
+        props.setProperty("mail.smtp.auth", "true");
 
         Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication pa = new PasswordAuthentication(username, password);
