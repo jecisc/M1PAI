@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
@@ -129,11 +131,23 @@ public class UserRestController {
         return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.BAD_REQUEST);
     }
 
-    @CrossOrigin
+    /*@CrossOrigin
     @RequestMapping(value="/get", method= RequestMethod.GET)
     public ResponseEntity<User> getUser(Authentication authentication) throws UserDoesNotExistException {
 
         return new ResponseEntity<>(getUserFromAuthentication(authentication), HttpStatus.OK);
+
+    }*/
+
+    @CrossOrigin
+    @RequestMapping(value="/get", method= RequestMethod.GET)
+    public ResponseEntity<User> getUser(Authentication authentication, HttpServletRequest request) throws UserDoesNotExistException {
+
+        User user = getUserFromAuthentication(authentication);
+        HttpSession session = request.getSession();
+        session.setAttribute("USER", user);
+        return ResponseEntity.ok(user);
+
 
     }
 
