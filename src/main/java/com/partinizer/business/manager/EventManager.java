@@ -1,6 +1,6 @@
 package com.partinizer.business.manager;
 
-import com.partinizer.business.exceptions.EventDoesNotExistException;
+import com.partinizer.business.exceptions.*;
 import com.partinizer.data.entity.Event;
 import com.partinizer.data.entity.User;
 import com.partinizer.data.repository.EventRepository;
@@ -64,4 +64,49 @@ public class EventManager {
     public List<Event> getAllEvents() {
         return this.eventRepository.findAll();
     }
+
+
+    public boolean createEvent(Event event){
+
+
+        eventRepository.save(event);
+    }
+
+    /**
+     * I check that the event name is valid.
+     *
+     * @param name The name of the event.
+     * @throws WrongNameException raised if the information is not valid.
+     */
+    public void checkName(String name) throws WrongNameException {
+        if (name == null || name.length() < 3 || name.length() > 40) {
+            throw new WrongNameException();
+        }
+    }
+
+    /**
+     * I check that the event description is valid.
+     *
+     * @param name The description of the event.
+     * @throws WrongEventDescriptionException raised if the information is not valid.
+     */
+    public void checkDescription(String description) throws WrongEventDescriptionException {
+        if (name == null ||  name.length() > 30) {
+            throw new WrongEventDescriptionException();
+        }
+    }
+
+    /**
+     * I check that the event description is valid.
+     *
+     * @param name The description of the event.
+     * @throws WrongEventDescriptionException raised if the information is not valid.
+     */
+    public void checkLocalisation(String localisation) throws WrongEventDescriptionException {
+        if (localisation == null ||  localisation.length() > 30) {
+            throw new WrongEventDescriptionException();
+        }
+    }
+
+
 }
