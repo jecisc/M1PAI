@@ -2,6 +2,7 @@ package com.partinizer.business.service;
 
 import com.partinizer.business.exceptions.EventDoesNotExistException;
 import com.partinizer.business.manager.EventManager;
+import com.partinizer.business.manager.UserManager;
 import com.partinizer.data.entity.Event;
 import com.partinizer.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,12 @@ public class EventService {
 
     protected EventManager eventManager;
 
+
     @Autowired
     public EventService(EventManager eventManager) {
+
         this.eventManager = eventManager;
+
     }
 
     /**
@@ -45,4 +49,10 @@ public class EventService {
     public List<Event> getAllEvents() {
         return this.eventManager.getAllEvents();
     }
+
+    /*public boolean createEvent(Event event){
+
+        eventManager.createEvent(event);
+
+    }*/
 }
