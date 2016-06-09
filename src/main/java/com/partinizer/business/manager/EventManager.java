@@ -2,9 +2,12 @@ package com.partinizer.business.manager;
 
 import com.partinizer.business.exceptions.EventDoesNotExistException;
 import com.partinizer.data.entity.Event;
+import com.partinizer.data.entity.User;
 import com.partinizer.data.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * TODO
@@ -34,5 +37,31 @@ public class EventManager {
             throw exception;
         }
         return event;
+    }
+
+    public List<Event> getEventsByParticipantId(User user) throws EventDoesNotExistException {
+        List<Event> events=this.eventRepository.getEventsByParticipantId(user.getId());
+        if(events==null){
+            EventDoesNotExistException exception = new EventDoesNotExistException();
+            exception.setId(user.getId());
+            throw exception;
+        }
+
+        return events;
+    }
+
+    public List<Event> getEventsInvitation(User user) throws EventDoesNotExistException {
+        List<Event> events=this.eventRepository.getEventsInvitation(user.getId());
+        if(events==null){
+            EventDoesNotExistException exception = new EventDoesNotExistException();
+            exception.setId(user.getId());
+            throw exception;
+        }
+
+        return events;
+    }
+
+    public List<Event> getAllEvents() {
+        return this.eventRepository.findAll();
     }
 }

@@ -3,8 +3,12 @@ package com.partinizer.business.service;
 import com.partinizer.business.exceptions.EventDoesNotExistException;
 import com.partinizer.business.manager.EventManager;
 import com.partinizer.data.entity.Event;
+import com.partinizer.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
+
+import java.util.List;
 
 /**
  * TODO
@@ -30,4 +34,15 @@ public class EventService {
         return eventManager.getEventById(id);
     }
 
+    public List<Event> getMyParticipations(User user) throws EventDoesNotExistException {
+        return eventManager.getEventsByParticipantId(user);
+    }
+
+    public List<Event> getEventsInvitation(User user) throws EventDoesNotExistException {
+        return eventManager.getEventsInvitation(user);
+    }
+
+    public List<Event> getAllEvents() {
+        return this.eventManager.getAllEvents();
+    }
 }

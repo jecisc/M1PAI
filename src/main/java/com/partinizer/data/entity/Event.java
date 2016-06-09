@@ -43,6 +43,18 @@ public class Event {
     @JoinColumn(name="event")
     protected List<Needed> neededs;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event")
+    protected List<Participant> participants;
+
+    public List<Participant> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<Participant> participants) {
+        this.participants = participants;
+    }
+
     public List<Needed> getNeededs() {
         return neededs;
     }
@@ -59,11 +71,11 @@ public class Event {
         this.dateEnd = dateEnd;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

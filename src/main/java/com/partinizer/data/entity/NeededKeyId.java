@@ -1,6 +1,7 @@
 package com.partinizer.data.entity;
 
-import javax.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -12,8 +13,10 @@ import java.io.Serializable;
 @Embeddable
 public class NeededKeyId implements Serializable{
 
-    @Column(name = "event")
-    protected Long event;
+    @OneToOne
+    @JoinColumn(name = "event")
+    @JsonIgnore
+    protected Event event;
 
     @OneToOne
     @JoinColumn(name = "ressource")
@@ -27,11 +30,11 @@ public class NeededKeyId implements Serializable{
         this.resource = resource;
     }
 
-    public Long getEvent() {
+    public Event getEvent() {
         return event;
     }
 
-    public void setEvent(Long event) {
+    public void setEvent(Event event) {
         this.event = event;
     }
 }
