@@ -2,6 +2,7 @@ package com.partinizer.data.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.jvnet.hk2.config.Changed;
 
 import javax.persistence.*;
 import java.util.*;
@@ -15,9 +16,9 @@ public class Event {
 
     @Id
     @Column(name = "idevent")
-    @GenericGenerator(name = "UserIdGenerator", strategy = "sequence",
+    @GenericGenerator(name = "EventIdGenerator", strategy = "sequence",
             parameters = {@Parameter(name = "sequence", value = "event_id_seq")})
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UserIdGenerator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EventIdGenerator")
     protected Long id;
 
     @Column(name = "name")
@@ -39,11 +40,11 @@ public class Event {
     @Column(name = "place")
     protected String localisation;
 
-    @OneToMany(fetch=FetchType.LAZY)
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name="event")
     protected List<Needed> neededs;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "event")
     protected List<Participant> participants;
 

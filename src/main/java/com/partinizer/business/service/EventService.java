@@ -1,14 +1,16 @@
 package com.partinizer.business.service;
 
 import com.partinizer.business.exceptions.EventDoesNotExistException;
+import com.partinizer.business.exceptions.WrongEventDescriptionException;
+import com.partinizer.business.exceptions.WrongNameException;
 import com.partinizer.business.manager.EventManager;
-import com.partinizer.data.entity.Event;
-import com.partinizer.data.entity.User;
+import com.partinizer.data.entity.*;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * TODO
@@ -44,5 +46,12 @@ public class EventService {
 
     public List<Event> getAllEvents() {
         return this.eventManager.getAllEvents();
+    }
+
+    public boolean createEvent(Event event) throws WrongNameException, WrongEventDescriptionException {
+
+
+        return eventManager.createEvent(event);
+
     }
 }

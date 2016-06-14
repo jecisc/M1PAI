@@ -1,13 +1,12 @@
 package com.partinizer.front.controller;
 
-import com.partinizer.business.exceptions.EventDoesNotExistException;
-import com.partinizer.business.exceptions.ParticipantDoesNotExistException;
-import com.partinizer.business.exceptions.UserDoesNotExistException;
+import com.partinizer.business.exceptions.*;
 import com.partinizer.business.service.EventService;
 import com.partinizer.business.service.ParticipantService;
 import com.partinizer.business.service.ResourceService;
 import com.partinizer.business.service.UserService;
 import com.partinizer.data.entity.*;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,7 +68,7 @@ public class EventRestController {
 
     }
 
-    @CrossOrigin
+    /*@CrossOrigin
     @RequestMapping(value = "/participants/{idEvent}", method=RequestMethod.GET)
     public ResponseEntity<List<Participant>> getParticipantsOf(@PathVariable("idEvent") Long idEvent) {
 
@@ -79,7 +78,7 @@ public class EventRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-    }
+    }*/
 
     @RequestMapping(value = "/myParticipations", method=RequestMethod.GET)
     public ResponseEntity<List<Event>> getMyParticipations(Authentication authentication) {
@@ -139,6 +138,25 @@ public class EventRestController {
 
         return new ResponseEntity<>(resourceService.getAllResourcesByCategory(),HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ResponseEntity<String> createEvent(Authentication authentication,@RequestBody Event event) {
+
+        if (event != null) {
+
+           try {
+               User user=getUserFromAuthentication(authentication);
+               event.setCreator(user);
+                eventService.createEvent(event);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (WrongNameException | WrongEventDescriptionException |UserDoesNotExistException e) {
+                return new ResponseEntity<>("Les informations de l'évènement ne sont pas correctes", HttpStatus.BAD_REQUEST);
+            }
+
+        }
+        return new ResponseEntity<>("Erreur sérialisation évènement",HttpStatus.BAD_REQUEST);
+    }
+
 
     public User getUserFromAuthentication(Authentication authentication) throws UserDoesNotExistException {
         return userService.getUserByPseudo(((UserDetails) authentication.getPrincipal()).getUsername());

@@ -2,10 +2,7 @@ package com.partinizer.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -14,35 +11,8 @@ import java.io.Serializable;
 @Embeddable
 public class ParticipantKeyId implements Serializable{
 
-    /*@OneToOne
-    @JoinColumn(name = "event")
-    @JsonIgnore
-    protected Event event;
-
-    @OneToOne
-    @JoinColumn(name = "appliuser")
-    protected User user;
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }*/
-
-    @Column(name = "event")
     protected long idEvent;
 
-    @Column(name = "appliuser")
     protected long idUser;
 
     public long getIdEvent() {

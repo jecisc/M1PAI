@@ -1,8 +1,7 @@
 package com.partinizer.business.manager;
 
 import com.partinizer.business.exceptions.*;
-import com.partinizer.data.entity.Event;
-import com.partinizer.data.entity.User;
+import com.partinizer.data.entity.*;
 import com.partinizer.data.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -66,10 +65,37 @@ public class EventManager {
     }
 
 
-    public boolean createEvent(Event event){
+    public boolean createEvent(Event event) throws WrongNameException, WrongEventDescriptionException {
+
+        checkName(event.getName());
+        checkDescription(event.getDescription());
 
 
-        eventRepository.save(event);
+        Event event_= new Event();
+        event_.setCreator(event.getCreator());
+        event_.setDescription(event.getDescription());
+        event_.setName(event.getName());
+        event_.setDateBeginning(event.getDateBeginning());
+        event_.setDateEnd(event.getDateEnd());
+        event_.setLocalisation(event.getLocalisation());
+
+        event_= eventRepository.save(event_);
+
+        if(event_!=null) {
+            for (Needed needed : event.getNeededs()) {
+                needed.setIdEvent(event_.getId());
+            }
+
+            for (Participant participant : event.getParticipants()) {
+                participant.setIdEvent(event_.getId());
+            }
+
+            event_.setNeededs(event.getNeededs());
+            event_.setParticipants(event.getParticipants());
+            eventRepository.save(event_);
+
+        }
+        return event != null;
     }
 
     /**
@@ -87,11 +113,11 @@ public class EventManager {
     /**
      * I check that the event description is valid.
      *
-     * @param name The description of the event.
+     * @param description The description of the event.
      * @throws WrongEventDescriptionException raised if the information is not valid.
      */
     public void checkDescription(String description) throws WrongEventDescriptionException {
-        if (name == null ||  name.length() > 30) {
+        if (description == null ||  description.length() > 30) {
             throw new WrongEventDescriptionException();
         }
     }
@@ -99,7 +125,7 @@ public class EventManager {
     /**
      * I check that the event description is valid.
      *
-     * @param name The description of the event.
+     * @param localisation The description of the event.
      * @throws WrongEventDescriptionException raised if the information is not valid.
      */
     public void checkLocalisation(String localisation) throws WrongEventDescriptionException {
