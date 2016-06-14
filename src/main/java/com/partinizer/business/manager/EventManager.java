@@ -64,7 +64,7 @@ public class EventManager {
         return this.eventRepository.findAll();
     }
 
-
+    //TODO: improve function
     public boolean createEvent(Event event) throws WrongNameException, WrongEventDescriptionException {
 
         checkName(event.getName());

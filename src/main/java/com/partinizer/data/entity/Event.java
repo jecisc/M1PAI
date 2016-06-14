@@ -1,5 +1,7 @@
 package com.partinizer.data.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.jvnet.hk2.config.Changed;
@@ -42,10 +44,12 @@ public class Event {
 
     @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name="event")
+    @Fetch(FetchMode.SUBSELECT)
     protected List<Needed> neededs;
 
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "event")
+    @Fetch(FetchMode.SUBSELECT)
     protected List<Participant> participants;
 
     public List<Participant> getParticipants() {
