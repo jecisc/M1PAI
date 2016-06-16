@@ -36,7 +36,6 @@ public class EventRestController {
         this.participantService=participantService;
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/events", method=RequestMethod.GET)
     public ResponseEntity<List<Event>> getAllEvents() {
 
@@ -56,17 +55,20 @@ public class EventRestController {
 
     }
 
-    @CrossOrigin
+
     @RequestMapping(value = "/resources/{idEvent}", method=RequestMethod.GET)
     public ResponseEntity<List<Needed>> getResourceOf(@PathVariable("idEvent") Long idEvent) {
 
         try {
-            return new ResponseEntity<>(eventService.getEventById(idEvent).getNeededs(),HttpStatus.OK);
+            return new ResponseEntity<>(eventService.getEventById(idEvent).getNeededs(), HttpStatus.OK);
         } catch (EventDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
     }
+
+
+
 
     /*@CrossOrigin
     @RequestMapping(value = "/participants/{idEvent}", method=RequestMethod.GET)
@@ -90,6 +92,20 @@ public class EventRestController {
         }
 
     }
+
+   /* @RequestMapping(value = "/cancelParticipation/{idEvent}", method=RequestMethod.GET)
+    public ResponseEntity<String> cancelParticipation(Authentication authentication,@PathVariable("idEvent") Long idEvent) {
+
+        try {
+            eventService.deleteParticipate(getUserFromAuthentication(authentication),idEvent);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }*/
+
+
 
     @RequestMapping(value = "/myEventsInvitation", method=RequestMethod.GET)
     public ResponseEntity<List<Event>> getEventsInvitation(Authentication authentication) {

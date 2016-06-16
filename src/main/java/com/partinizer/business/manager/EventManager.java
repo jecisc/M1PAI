@@ -49,6 +49,10 @@ public class EventManager {
         return events;
     }
 
+   /* public void deleteParticipate(User user,long idEvent){
+        this.eventRepository.deleteParticipate(user.getId(),idEvent);
+    }*/
+
     public List<Event> getEventsCreated(User user) throws EventDoesNotExistException {
         List<Event> events=this.eventRepository.getEventsCreated(user.getId());
         if(events==null){

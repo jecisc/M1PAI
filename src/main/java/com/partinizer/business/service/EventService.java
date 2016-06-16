@@ -40,6 +40,10 @@ public class EventService {
         return eventManager.getEventsByParticipantId(user);
     }
 
+    /*public void deleteParticipate(User user,long idEvent){
+        this.eventManager.deleteParticipate(user,idEvent);
+    }*/
+
     public List<Event> getEventsInvitation(User user) throws EventDoesNotExistException {
         return eventManager.getEventsInvitation(user);
     }
