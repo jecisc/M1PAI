@@ -17,4 +17,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query(value="select e from Event e, Participant p, User u where u.id=p.id.idUser and p.id.idEvent=e.id and u.id=?1 and p.accepted=false")
     List<Event> getEventsInvitation(long idUser);
+
+    @Query(value="select distinct e from Event e where  e.creator.id=?1")
+    List<Event> getEventsCreated(long idUser);
+
+
 }

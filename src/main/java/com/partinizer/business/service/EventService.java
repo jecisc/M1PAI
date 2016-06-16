@@ -44,6 +44,10 @@ public class EventService {
         return eventManager.getEventsInvitation(user);
     }
 
+    public List<Event> getEventsCreated(User user) throws EventDoesNotExistException {
+        return eventManager.getEventsCreated(user);
+    }
+
     public List<Event> getAllEvents() {
         return this.eventManager.getAllEvents();
     }

@@ -102,6 +102,17 @@ public class EventRestController {
 
     }
 
+    @RequestMapping(value = "/myEventsCreated", method=RequestMethod.GET)
+    public ResponseEntity<List<Event>> getEventsCreated(Authentication authentication) {
+
+        try {
+            return new ResponseEntity<>(eventService.getEventsCreated(getUserFromAuthentication(authentication)),HttpStatus.OK);
+        } catch (EventDoesNotExistException | UserDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
     @RequestMapping(value = "/accept/{idEvent}", method=RequestMethod.GET)
     public ResponseEntity<String> accept(Authentication authentication,@PathVariable("idEvent") Long idEvent) {
 
