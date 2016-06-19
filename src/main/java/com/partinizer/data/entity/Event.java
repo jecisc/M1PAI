@@ -43,12 +43,12 @@ public class Event {
     protected String localisation;
 
     @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name="event")
+    @JoinColumn(name="event" ,insertable = false, updatable = false)
     @Fetch(FetchMode.SUBSELECT)
     protected List<Needed> neededs;
 
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "event")
+    @JoinColumn(name = "event" ,insertable = false, updatable = false)
     @Fetch(FetchMode.SUBSELECT)
     protected List<Participant> participants;
 

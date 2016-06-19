@@ -5,6 +5,7 @@ import com.partinizer.data.entity.*;
 import com.partinizer.data.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -49,9 +50,7 @@ public class EventManager {
         return events;
     }
 
-   /* public void deleteParticipate(User user,long idEvent){
-        this.eventRepository.deleteParticipate(user.getId(),idEvent);
-    }*/
+
 
     public List<Event> getEventsCreated(User user) throws EventDoesNotExistException {
         List<Event> events=this.eventRepository.getEventsCreated(user.getId());
@@ -80,6 +79,7 @@ public class EventManager {
     }
 
     //TODO: improve function
+    @Transactional
     public boolean createEvent(Event event) throws WrongNameException, WrongEventDescriptionException {
 
         checkName(event.getName());
@@ -111,6 +111,18 @@ public class EventManager {
 
         }
         return event != null;
+    }
+
+    public boolean deleteEvent(long idEvent,User user){
+        Event event=eventRepository.findOne(idEvent);
+        if(event!=null && event.getCreator().getId()==user.getId()){
+
+            eventRepository.delete(event);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

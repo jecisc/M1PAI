@@ -1,13 +1,17 @@
 package com.partinizer.business.service;
 
 import com.partinizer.business.exceptions.EventDoesNotExistException;
+import com.partinizer.business.exceptions.ParticipantDoesNotExistException;
 import com.partinizer.business.exceptions.WrongEventDescriptionException;
 import com.partinizer.business.exceptions.WrongNameException;
 import com.partinizer.business.manager.EventManager;
+import com.partinizer.business.manager.NeededManager;
+import com.partinizer.business.manager.ParticipantManager;
 import com.partinizer.data.entity.*;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 
 import java.util.*;
@@ -19,10 +23,14 @@ import java.util.*;
 public class EventService {
 
     protected EventManager eventManager;
+    protected ParticipantManager participantManager;
+    protected NeededManager neededManager;
 
     @Autowired
-    public EventService(EventManager eventManager) {
+    public EventService(EventManager eventManager,ParticipantManager participantManager,NeededManager neededManager) {
         this.eventManager = eventManager;
+        this.participantManager = participantManager;
+        this.neededManager = neededManager;
     }
 
     /**
@@ -40,9 +48,7 @@ public class EventService {
         return eventManager.getEventsByParticipantId(user);
     }
 
-    /*public void deleteParticipate(User user,long idEvent){
-        this.eventManager.deleteParticipate(user,idEvent);
-    }*/
+
 
     public List<Event> getEventsInvitation(User user) throws EventDoesNotExistException {
         return eventManager.getEventsInvitation(user);
@@ -61,5 +67,21 @@ public class EventService {
 
         return eventManager.createEvent(event);
 
+    }
+
+    @Transactional
+    public boolean deleteEvent(long idEvent,User user) throws EventDoesNotExistException {
+
+        Event event=eventManager.getEventById(idEvent);
+        if(event!=null){
+            for(Participant participant:event.getParticipants()){
+                participantManager.delete(participant);
+            }
+            for(Needed needed:event.getNeededs()){
+                neededManager.delete(needed);
+            }
+
+        }
+        return eventManager.deleteEvent(idEvent,user);
     }
 }

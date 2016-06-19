@@ -35,11 +35,14 @@ public class ParticipantManager {
         return participant;
     }
 
-    public Participant findOne(long idEvent, long idParticipant) throws ParticipantDoesNotExistException {
+    public Participant findOne(long idParticipant,long idEvent) throws ParticipantDoesNotExistException {
 
         ParticipantKeyId pk =createParticipantKey(idEvent,idParticipant);
+        Participant participant=participantRepository.findOne(pk);
+        /*participant.setIdUser(idParticipant);
+        participant.setIdEvent(idEvent);
 
-        Participant participant=this.participantRepository.findOne(pk);
+        participant=this.participantRepository.findOne(participant);*/
 
         if(participant==null){
             ParticipantDoesNotExistException exception = new ParticipantDoesNotExistException("No Participant object exist this key");

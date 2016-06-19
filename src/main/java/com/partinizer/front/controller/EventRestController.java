@@ -67,9 +67,6 @@ public class EventRestController {
 
     }
 
-
-
-
     /*@CrossOrigin
     @RequestMapping(value = "/participants/{idEvent}", method=RequestMethod.GET)
     public ResponseEntity<List<Participant>> getParticipantsOf(@PathVariable("idEvent") Long idEvent) {
@@ -93,17 +90,17 @@ public class EventRestController {
 
     }
 
-   /* @RequestMapping(value = "/cancelParticipation/{idEvent}", method=RequestMethod.GET)
+   @RequestMapping(value = "/cancelParticipation/{idEvent}", method=RequestMethod.DELETE)
     public ResponseEntity<String> cancelParticipation(Authentication authentication,@PathVariable("idEvent") Long idEvent) {
 
         try {
-            eventService.deleteParticipate(getUserFromAuthentication(authentication),idEvent);
+            participantService.deleteParticipate(getUserFromAuthentication(authentication),idEvent);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-    }*/
+    }
 
 
 
@@ -183,6 +180,20 @@ public class EventRestController {
         }
         return new ResponseEntity<>("Erreur sérialisation évènement",HttpStatus.BAD_REQUEST);
     }
+
+    @RequestMapping(value = "/delete/{idEvent}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteEvent(Authentication authentication,@PathVariable("idEvent") Long idEvent) {
+
+
+        try {
+            User user = getUserFromAuthentication(authentication);
+            eventService.deleteEvent(idEvent, user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (UserDoesNotExistException | EventDoesNotExistException e ) {
+            return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 
     public User getUserFromAuthentication(Authentication authentication) throws UserDoesNotExistException {
