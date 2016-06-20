@@ -6,7 +6,14 @@ INSERT INTO appliuser (email,firstName,lastName,pseudo,passwd,inscription,isacti
          ('russel.crow@mail.com','russel','crow','rcrow','Password59','2016/04/30','true',''),
          ('brad.pit@mail.com','brad','pit','bpit','Password59','2016/04/30','true',''),
          ('edward.norton@mail.com','edward','norton','enorton','Password59','2016/04/30','true',''),
-         ('kurt.russel@mail.com','kurt','russel','krussel','Password59','2016/04/30','true','');
+         ('kurt.russel@mail.com','kurt','russel','krussel','Password59','2016/04/30','true',''),
+         ('kevin.spacey@mail.com','kevin','spacey','kspacey','Password59','2016/04/30','true',''),
+         ('gerard.depardieu@mail.com','gerard','depardieu','gdepardieu','Password59','2016/04/30','true',''),
+         ('tom.cruise@mail.com','tom','cruise','tcruise','Password59','2016/04/30','true',''),
+         ('johnny.depp@mail.com','johnny','depp','jdepp','Password59','2016/04/30','true',''),
+         ('christian.clavier@mail.com','christian','clavier','cclavier','Password59','2016/04/30','true',''),
+         ('jean.reno@mail.com','jean','reno','jreno','Password59','2016/04/30','true',''),
+         ('dany.boon@mail.com','dany','boon','dboon','Password59','2016/04/30','true','');
 
 INSERT INTO arefriend VALUES(1,2),(2,1),(1,4),(4,1),(1,7),(7,1),(6,3),(3,6),(2,4),(4,2);
 

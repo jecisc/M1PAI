@@ -45,7 +45,12 @@ public class UserManagerTest {
         user.setActive(false);
     }
 
-
+    @Test
+    public void getAskedFriendsUsers(){
+        user.setId(3);
+        List<User> list=userManager.getFriendsAsking(user);
+        assertNotNull(list);
+    }
 
   /*  @Test
     public void createUser(){
@@ -191,12 +196,12 @@ public class UserManagerTest {
         assertNotNull(users);
     }*/
 
-    @Test
+   /* @Test
     public void getFriendRequestById(){
 
        User user_= userManager.getAllFriendRequests(3);
         assertNotNull(user_.getFriendRequest());
-    }
+    }*/
 
   /*  @Test
     public void updateUser(){

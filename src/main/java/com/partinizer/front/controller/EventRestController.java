@@ -141,7 +141,7 @@ public class EventRestController {
 
     }
 
-    @RequestMapping(value = "/deny/{idEvent}", method=RequestMethod.GET)
+    @RequestMapping(value = "/deny/{idEvent}", method=RequestMethod.DELETE)
     public ResponseEntity<String> deny(Authentication authentication,@PathVariable("idEvent") Long idEvent) {
 
         try {

@@ -91,7 +91,14 @@ public class UserService {
     }
 
     public List<User> searchUser(User user,String pseudo,int page, int size){
-        return userManager.searchUser(user,pseudo,page,size);
+        List<User> resultList=userManager.searchUser(user,pseudo,page,size);
+        List<User> friendsAskingList=userManager.getFriendsAsking(user);
+        resultList.removeAll(friendsAskingList);
+        return resultList;
+    }
+
+    public List<User> getFriendsAsking(User user){
+        return userManager.getFriendsAsking(user);
     }
 
     public boolean deleteFriend(User user, long idFriend){

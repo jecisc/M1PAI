@@ -92,6 +92,10 @@ public class UserManager {
         return  list;
     }
 
+    public List<User> getFriendsAsking(User user){
+        return userRepository.getFriendsAsking(user.getId());
+    }
+
     /**
      * I return the number of result on searching users filter by pseudo
      * @param pseudoFilter The filter of search

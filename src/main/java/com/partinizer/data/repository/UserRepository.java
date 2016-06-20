@@ -62,5 +62,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
     int getNumberOfUsersFilterByPseudo(String pseudoFilter);*/
 
     int countByPseudoStartingWith(String pseudoFilter);
+
+    @Query(value="select a.iduser,a.firstname,a.lastname,a.pseudo,a.avatar,a.email,a.passwd,a.isactive,a.inscription from appliuser a,askfriend ask where ask.asker=?1 and ask.friend=a.iduser" ,nativeQuery = true)
+    List<User> getFriendsAsking(long idUser);
 }
 

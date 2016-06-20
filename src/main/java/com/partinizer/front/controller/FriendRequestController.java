@@ -92,6 +92,21 @@ public class FriendRequestController {
 
     }
 
+    @RequestMapping(value = "/getFriendAsking", method= RequestMethod.GET)
+    public ResponseEntity<List<User>> getFriendsAsking(Authentication authentication){
+
+        try {
+            User user = getUserFromAuthentication(authentication);
+
+            return new ResponseEntity<>(userService.getFriendsAsking(user), HttpStatus.OK);
+
+
+        } catch (UserDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
     public User getUserFromAuthentication(Authentication authentication) throws UserDoesNotExistException {
         return userService.getUserByPseudo(((UserDetails) authentication.getPrincipal()).getUsername());
     }
