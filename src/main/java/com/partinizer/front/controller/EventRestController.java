@@ -8,6 +8,7 @@ import com.partinizer.business.service.ParticipantService;
 import com.partinizer.business.service.ResourceService;
 import com.partinizer.business.service.UserService;
 import com.partinizer.data.entity.*;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -101,6 +102,19 @@ public class EventRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @RequestMapping(value = "/numberOfEventsInvitations", method=RequestMethod.GET)
+    public ResponseEntity<String> getNumberEventsInvitation(Authentication authentication) {
+        JSONObject jsonWriter = new JSONObject();
+        try {
+            // TODO this is bad. Instead I should directly use a request that will do a `count(*)` but for now, no time.
+            jsonWriter.put("number", String.valueOf(eventService.getEventsInvitation(getUserFromAuthentication(authentication)).size()));
+            return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.OK);
+        } catch (EventDoesNotExistException | UserDoesNotExistException e) {
+            jsonWriter.put("number", null);
+        }
+        return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/accept/{idEvent}", method=RequestMethod.GET)

@@ -3,6 +3,7 @@ package com.partinizer.front.controller;
 import com.partinizer.business.exceptions.UserDoesNotExistException;
 import com.partinizer.business.service.UserService;
 import com.partinizer.data.entity.User;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -89,6 +90,28 @@ public class FriendRequestController {
         } catch (UserDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+    }
+
+    // TODO this is bad. Instead I should directly use a request that will do a `count(*)` but for now, no time.
+    @RequestMapping(value = "/numberOfInvitations", method= RequestMethod.GET)
+    public ResponseEntity<String> getNumberOfFriendRequest(Authentication authentication){
+
+        JSONObject jsonWriter = new JSONObject();
+
+        try {
+            // TODO this is bad. Instead I should directly use a request that will do a `count(*)` but for now, no time.
+            User user = getUserFromAuthentication(authentication);
+            if(user.getFriends()!=null){ //TODO getFriends should not be able to return null but raise an error if there is a problem
+                jsonWriter.put("number", String.valueOf(userService.getAllFriendRequest(user.getId()).getFriendRequest().size()));
+                return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.OK);
+            }
+            jsonWriter.put("number", null);
+        } catch (UserDoesNotExistException e) {
+            jsonWriter.put("number", null);
+        }
+
+        return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.BAD_REQUEST);
 
     }
 
