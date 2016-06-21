@@ -59,6 +59,20 @@ public class UserRestController {
 
     }
 
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+
+        /* Getting session and then invalidating it */
+
+        HttpSession session = request.getSession(false);
+
+        if (request.isRequestedSessionIdValid() && session != null) {
+            session.invalidate();
+            return new ResponseEntity<>("", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
+    }
+
     /**Méthode de création d'un utilisateur basé sur une requête HTTP POST**/
     @CrossOrigin
     @RequestMapping(value = "/create", method=RequestMethod.POST)

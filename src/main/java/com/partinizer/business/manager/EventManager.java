@@ -1,11 +1,11 @@
 package com.partinizer.business.manager;
 
-import com.partinizer.business.exceptions.EventDoesNotExistException;
-import com.partinizer.data.entity.Event;
-import com.partinizer.data.entity.User;
+import com.partinizer.business.exceptions.*;
+import com.partinizer.data.entity.*;
 import com.partinizer.data.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,6 +50,19 @@ public class EventManager {
         return events;
     }
 
+
+
+    public List<Event> getEventsCreated(User user) throws EventDoesNotExistException {
+        List<Event> events=this.eventRepository.getEventsCreated(user.getId());
+        if(events==null){
+            EventDoesNotExistException exception = new EventDoesNotExistException();
+            exception.setId(user.getId());
+            throw exception;
+        }
+
+        return events;
+    }
+
     public List<Event> getEventsInvitation(User user) throws EventDoesNotExistException {
         List<Event> events=this.eventRepository.getEventsInvitation(user.getId());
         if(events==null){
@@ -64,4 +77,89 @@ public class EventManager {
     public List<Event> getAllEvents() {
         return this.eventRepository.findAll();
     }
+
+    //TODO: improve function
+    @Transactional
+    public boolean createEvent(Event event) throws WrongNameException, WrongEventDescriptionException {
+
+        checkName(event.getName());
+        checkDescription(event.getDescription());
+
+
+        Event event_= new Event();
+        event_.setCreator(event.getCreator());
+        event_.setDescription(event.getDescription());
+        event_.setName(event.getName());
+        event_.setDateBeginning(event.getDateBeginning());
+        event_.setDateEnd(event.getDateEnd());
+        event_.setLocalisation(event.getLocalisation());
+
+        event_= eventRepository.save(event_);
+
+        if(event_!=null) {
+            for (Needed needed : event.getNeededs()) {
+                needed.setIdEvent(event_.getId());
+            }
+
+            for (Participant participant : event.getParticipants()) {
+                participant.setIdEvent(event_.getId());
+            }
+
+            event_.setNeededs(event.getNeededs());
+            event_.setParticipants(event.getParticipants());
+            eventRepository.save(event_);
+
+        }
+        return event != null;
+    }
+
+    public boolean deleteEvent(long idEvent,User user){
+        Event event=eventRepository.findOne(idEvent);
+        if(event!=null && event.getCreator().getId()==user.getId()){
+
+            eventRepository.delete(event);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * I check that the event name is valid.
+     *
+     * @param name The name of the event.
+     * @throws WrongNameException raised if the information is not valid.
+     */
+    public void checkName(String name) throws WrongNameException {
+        if (name == null || name.length() < 3 || name.length() > 40) {
+            throw new WrongNameException();
+        }
+    }
+
+    /**
+     * I check that the event description is valid.
+     *
+     * @param description The description of the event.
+     * @throws WrongEventDescriptionException raised if the information is not valid.
+     */
+    public void checkDescription(String description) throws WrongEventDescriptionException {
+        if (description == null ||  description.length() > 30) {
+            throw new WrongEventDescriptionException();
+        }
+    }
+
+    /**
+     * I check that the event description is valid.
+     *
+     * @param localisation The description of the event.
+     * @throws WrongEventDescriptionException raised if the information is not valid.
+     */
+    public void checkLocalisation(String localisation) throws WrongEventDescriptionException {
+        if (localisation == null ||  localisation.length() > 30) {
+            throw new WrongEventDescriptionException();
+        }
+    }
+
+
 }

@@ -1,7 +1,10 @@
 package com.partinizer.data.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.jvnet.hk2.config.Changed;
 
 import javax.persistence.*;
 import java.util.*;
@@ -15,9 +18,9 @@ public class Event {
 
     @Id
     @Column(name = "idevent")
-    @GenericGenerator(name = "UserIdGenerator", strategy = "sequence",
+    @GenericGenerator(name = "EventIdGenerator", strategy = "sequence",
             parameters = {@Parameter(name = "sequence", value = "event_id_seq")})
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UserIdGenerator")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EventIdGenerator")
     protected Long id;
 
     @Column(name = "name")
@@ -39,12 +42,14 @@ public class Event {
     @Column(name = "place")
     protected String localisation;
 
-    @OneToMany(fetch=FetchType.LAZY)
-    @JoinColumn(name="event")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name="event" ,insertable = false, updatable = false)
+    @Fetch(FetchMode.SUBSELECT)
     protected List<Needed> neededs;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event")
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "event" ,insertable = false, updatable = false)
+    @Fetch(FetchMode.SUBSELECT)
     protected List<Participant> participants;
 
     public List<Participant> getParticipants() {

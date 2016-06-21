@@ -10,30 +10,26 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "participate")
+@IdClass(ParticipantKeyId.class)
 public class Participant {
 
 
-    @EmbeddedId
-    @JsonIgnore
-    protected ParticipantKeyId id;
 
     @OneToOne
-    @MapsId("idUser")
-    @JoinColumn(name = "appliuser")
+    @JoinColumn(name="appliuser",insertable = false,updatable = false)
     protected User user;
+
+    @Id
+    @Column(name="appliuser")
+    protected long idUser;
+
+    @Id
+    @Column(name="event")
+    protected long idEvent;
 
     @Column(name = "accepted")
     protected Boolean accepted;
 
-    @JsonIgnore
-    public ParticipantKeyId getId() {
-        return id;
-    }
-
-    @JsonProperty
-    public void setId(ParticipantKeyId id) {
-        this.id = id;
-    }
 
     public Boolean getAccepted() {
         return accepted;
@@ -53,4 +49,20 @@ public class Participant {
     }
 
 
+
+    public long getIdEvent() {
+        return idEvent;
+    }
+
+    public void setIdEvent(long idEvent) {
+        this.idEvent = idEvent;
+    }
+
+    public long getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(long idUser) {
+        this.idUser = idUser;
+    }
 }
