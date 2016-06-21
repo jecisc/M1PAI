@@ -1,8 +1,6 @@
 package com.partinizer.front.controller;
 
-import com.partinizer.business.exceptions.EventDoesNotExistException;
-import com.partinizer.business.exceptions.ParticipantDoesNotExistException;
-import com.partinizer.business.exceptions.UserDoesNotExistException;
+import com.partinizer.business.exceptions.*;
 import com.partinizer.business.service.EventService;
 import com.partinizer.business.service.ParticipantService;
 import com.partinizer.business.service.ResourceService;
@@ -93,11 +91,34 @@ public class EventRestController {
 
     }
 
+    @RequestMapping(value = "/cancelParticipation/{idEvent}", method=RequestMethod.DELETE)
+    public ResponseEntity<String> cancelParticipation(Authentication authentication,@PathVariable("idEvent") Long idEvent) {
+
+        try {
+            participantService.deleteParticipate(getUserFromAuthentication(authentication),idEvent);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
     @RequestMapping(value = "/myEventsInvitation", method=RequestMethod.GET)
     public ResponseEntity<List<Event>> getEventsInvitation(Authentication authentication) {
 
         try {
             return new ResponseEntity<>(eventService.getEventsInvitation(getUserFromAuthentication(authentication)),HttpStatus.OK);
+        } catch (EventDoesNotExistException | UserDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @RequestMapping(value = "/myEventsCreated", method=RequestMethod.GET)
+    public ResponseEntity<List<Event>> getEventsCreated(Authentication authentication) {
+
+        try {
+            return new ResponseEntity<>(eventService.getEventsCreated(getUserFromAuthentication(authentication)),HttpStatus.OK);
         } catch (EventDoesNotExistException | UserDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -145,6 +166,37 @@ public class EventRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ResponseEntity<String> createEvent(Authentication authentication,@RequestBody Event event) {
+
+        if (event != null) {
+
+            try {
+                User user=getUserFromAuthentication(authentication);
+                event.setCreator(user);
+                eventService.createEvent(event);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (WrongNameException | WrongEventDescriptionException |UserDoesNotExistException e) {
+                return new ResponseEntity<>("Les informations de l'évènement ne sont pas correctes", HttpStatus.BAD_REQUEST);
+            }
+
+        }
+        return new ResponseEntity<>("Erreur sérialisation évènement",HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/delete/{idEvent}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteEvent(Authentication authentication,@PathVariable("idEvent") Long idEvent) {
+
+
+        try {
+            User user = getUserFromAuthentication(authentication);
+            eventService.deleteEvent(idEvent, user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (UserDoesNotExistException | EventDoesNotExistException e ) {
+            return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
+        }
     }
 
 

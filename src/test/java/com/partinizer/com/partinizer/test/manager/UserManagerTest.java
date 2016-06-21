@@ -97,7 +97,7 @@ public class UserManagerTest {
         assertNull(user);
     }
 
-<<<<<<< HEAD
+
 
     @Test
     public void createUser(){
@@ -114,9 +114,9 @@ public class UserManagerTest {
 
 
     @Test
-=======
+
    @Test
->>>>>>> vm_lot1_manageFriends
+
     public void createUserWithBadPassword(){
 
         user.setPassword("fkjd5sfldskm");
