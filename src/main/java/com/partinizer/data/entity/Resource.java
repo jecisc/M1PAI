@@ -17,7 +17,7 @@ public class Resource {
     String name;
 
     @Column(name = "icon")
-    byte[] icon;
+    String icon;
 
     @Column(name = "category")
     long idCategory;
@@ -46,11 +46,11 @@ public class Resource {
         this.idCategory = idCategory;
     }
 
-    public byte[] getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(byte[] icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 }
