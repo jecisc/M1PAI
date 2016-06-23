@@ -8,53 +8,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by vincent on 08/06/2016.
+ * I am a manager which should contains the behavior of the Participants of the project.
  */
 @Component
 public class ParticipantManager {
 
 
-    private ParticipantRepository participantRepository;
+    protected ParticipantRepository participantRepository;
 
     @Autowired
     public ParticipantManager(ParticipantRepository participantRepository){
         this.participantRepository=participantRepository;
     }
 
-
-    public Participant create(long idEvent, long idParticipant){
-        return null;
-    }
-
-
     public Participant update(Participant participant) {
         participant=participantRepository.save(participant);
-
-
 
         return participant;
     }
 
     public Participant findOne(long idParticipant,long idEvent) throws ParticipantDoesNotExistException {
 
-        ParticipantKeyId pk =createParticipantKey(idEvent,idParticipant);
-        Participant participant=participantRepository.findOne(pk);
-        /*participant.setIdUser(idParticipant);
-        participant.setIdEvent(idEvent);
-
-        participant=this.participantRepository.findOne(participant);*/
+        Participant participant = participantRepository.findOne(createParticipantKey(idEvent,idParticipant));
 
         if(participant==null){
-            ParticipantDoesNotExistException exception = new ParticipantDoesNotExistException("No Participant object exist this key");
-
-            throw exception;
+            throw new ParticipantDoesNotExistException("No Participant object exist this key");
         }
 
         return participant;
     }
 
+    //TODO WTF?
     public boolean delete(Participant participant) {
-
         this.participantRepository.delete(participant);
         return true;
     }
@@ -63,7 +48,6 @@ public class ParticipantManager {
         ParticipantKeyId pk= new ParticipantKeyId();
         pk.setIdEvent(idEvent);
         pk.setIdUser(idParticipant);
-
         return pk;
     }
 

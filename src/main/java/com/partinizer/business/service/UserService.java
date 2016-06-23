@@ -41,15 +41,6 @@ public class UserService {
         return userManager.getNumberOfUsersFilterByPseudo(pseudoFilter);
     }
 
-
-    public User getAllFriends(long id){
-        return userManager.getAllFriends(id);
-    }
-
-    public User getAllFriendRequest(long id){
-        return userManager.getAllFriendRequests(id);
-    }
-
     /**
      * I return the user matching an email.
      * @param mail The email of the user.

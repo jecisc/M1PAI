@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Created by vincent on 10/03/16.
+ * I am a manager which should contains the behavior of the User of the project.
  */
 @Component
 public class UserManager {
@@ -54,7 +54,7 @@ public class UserManager {
         try {
             this.sendMailTo(user, "Partinizer - Inscription", this.subscriptionMailContentFor(user));
         } catch (MessagingException e) {
-            e.printStackTrace(); //TODO maybe a retry?
+            e.printStackTrace(); //TODO Cyril: maybe a retry?
         }
         return userRepository.save(user);
 
@@ -77,31 +77,38 @@ public class UserManager {
         this.userMailIsFree(user.getMail());
     }
 
-    public User getAllFriends(long id) {
-        return userRepository.getFriendsById(id);
-    }
-
-    public User getAllFriendRequests(long id){
-        return userRepository.getFriendRequestById(id);
-    }
-
-    public List<User> searchUser(User user,String pseudo, int page, int size) {
-        List<User> list= userRepository.findByPseudoStartingWithOrderByPseudo(pseudo, new PageRequest(page, size));
+    /**
+     * I return a list of users matching of pseudo. The list do not contains a certain user and his friends.
+     * I do not return the full list of users but a certain page. Each page has the same number of user.
+     * @param user The to remove from the result.
+     * @param pseudo The pseudo to match.
+     * @param page The current page to return.
+     * @param pageSize The size of a page.
+     * @return A list of user from a certain page matching a pseudo.
+     */
+    public List<User> searchUser(User user, String pseudo, int page, int pageSize) {
+        List<User> list = userRepository.findByPseudoStartingWithOrderByPseudo(pseudo, new PageRequest(page, pageSize));
         list.removeAll(user.getFriends());
         list.remove(user);
-        return  list;
+        return list;
     }
 
-    public List<User> getFriendsAsking(User user){
+    /**
+     * I am a query to get the users asking a user to be friend.
+     * @param user The user receiving the invitations.
+     * @return The list of the users asking to be friend with the user in parameter.
+     */
+    public List<User> getFriendsAsking(User user) {
         return userRepository.getFriendsAsking(user.getId());
     }
 
     /**
      * I return the number of result on searching users filter by pseudo
+     *
      * @param pseudoFilter The filter of search
      * @return The number of result
      */
-    public int getNumberOfUsersFilterByPseudo(String pseudoFilter){
+    public int getNumberOfUsersFilterByPseudo(String pseudoFilter) {
         return userRepository.countByPseudoStartingWith(pseudoFilter);
     }
 
@@ -119,8 +126,8 @@ public class UserManager {
     /**
      * Check updated fields and send a update request to userRepository
      *
-     * @param userUpdate
-     * @param userAuthenticate
+     * @param userUpdate the user
+     * @param userAuthenticate a
      * @return The user updated
      */
     public User updateUser(User userUpdate, User userAuthenticate) throws WrongInformationException {
@@ -128,7 +135,7 @@ public class UserManager {
         checkName(userUpdate.getName());
         checkAvatar(userUpdate.getAvatar());
 
-        if(userUpdate.getPassword()!=null) {
+        if (userUpdate.getPassword() != null) {
             isValidPassword(userUpdate.getPassword());
             userAuthenticate.setPassword(userUpdate.getPassword());
         }
@@ -160,13 +167,19 @@ public class UserManager {
             }
         }
 
-
         return false;
     }
 
+    /**
+     * I add a friend to a user.
+     * @param user The user.
+     * @param idFriend The friend to add.
+     * @return True if everything went fine. Else false.
+     */
     @Transactional
     public Boolean addFriend(User user, long idFriend) {
 
+        //TODO: Cyril: This is bad to return a Boolean. We should manage it with errors.
         //Check if friend user exist
         User friend = userRepository.getOne(idFriend);
         //Check if friendRequest exist
@@ -180,20 +193,33 @@ public class UserManager {
         return false;
     }
 
-    public Boolean addFriendRequest(User user, long idFriend){
-        //TODO Add Exception
+    /**
+     * I add a Friend request to a user.
+     * @param user The user.
+     * @param idFriend The friend to request.
+     * @return True if everything went fine.
+     */
+    public Boolean addFriendRequest(User user, long idFriend) {
 
+        //TODO: Cyril: This is bad to return a Boolean. We should manage it with errors.
         //Check if friend user exist
         User friend = userRepository.getOne(idFriend);
-        if (friend != null){
-            userRepository.addFriendRequest(user.getId(),idFriend);
+        if (friend != null) {
+            userRepository.addFriendRequest(user.getId(), idFriend);
             return true;
         }
         return false;
     }
 
+    /**
+     * I delete a friend request.
+     * @param user The user.
+     * @param idFriend The friend to delete the request.
+     * @return True if everything went fine.
+     */
     public Boolean deleteFriendRequest(User user, long idFriend) {
 
+        //TODO: Cyril: This is bad to return a Boolean. We should manage it with errors.
         User friend = userRepository.getOne(idFriend);
         //Check if friendRequest exist
         if (friend != null && checkFriendRequestExist(user, idFriend)) {
@@ -203,7 +229,7 @@ public class UserManager {
         return false;
     }
 
-    private boolean validUser(User user) {
+    public boolean validUser(User user) {
 
         return user != null && user.getId() != 0;
     }
@@ -282,7 +308,7 @@ public class UserManager {
 
     public void checkAvatar(String avatar) {
         //return avatar!=null;
-        //TODO
+        //TODO for the future.
     }
 
     /**
@@ -326,7 +352,7 @@ public class UserManager {
         props.put("mail.smtp.host", UserManager.HOST);
         props.put("mail.smtp.port", UserManager.PORT);
         props.put("mail.smtp.ssl.enable", "true");
-        props.put("mail.smtp.starttls.enable","true");
+        props.put("mail.smtp.starttls.enable", "true");
         props.setProperty("mail.smtp.user", username);
         props.setProperty("mail.smtp.password", password);
         props.setProperty("mail.smtp.auth", "true");
@@ -469,12 +495,12 @@ public class UserManager {
     /**
      * Check if the friendRequest among the list
      *
-     * @param user
-     * @param idFriend
+     * @param user the user
+     * @param idFriend the friend
      * @return true if exist, false if not
      */
     public Boolean checkFriendRequestExist(User user, long idFriend) {
-        for (User friendRequest : user.getFriendRequest()) {
+        for (User friendRequest : user.getFriendRequests()) {
             if (friendRequest.getId() == idFriend) {
                 return true;
             }

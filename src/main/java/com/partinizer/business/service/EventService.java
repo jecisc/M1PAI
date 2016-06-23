@@ -28,8 +28,6 @@ public class EventService {
     protected ParticipantManager participantManager;
     protected NeededManager neededManager;
 
-
-
     @Autowired
     public EventService(EventManager eventManager, ParticipantManager participantManager, NeededManager neededManager) {
         this.eventManager = eventManager;
@@ -65,10 +63,7 @@ public class EventService {
     }
 
     public boolean createEvent(Event event) throws WrongNameException, WrongEventDescriptionException {
-
-
         return eventManager.createEvent(event);
-
     }
 
     @Transactional

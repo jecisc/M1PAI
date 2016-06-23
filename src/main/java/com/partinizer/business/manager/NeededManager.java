@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by vincent on 19/06/2016.
+ * I am a manager which should contains the behavior of the Neededs of the project.
  */
 @Component
 public class NeededManager {
 
-    private NeededRepository neededRepository;
+    protected NeededRepository neededRepository;
 
     @Autowired
     public NeededManager(NeededRepository neededRepository){

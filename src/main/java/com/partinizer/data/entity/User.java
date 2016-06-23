@@ -17,8 +17,8 @@ import java.util.List;
 @NamedEntityGraphs({
         @NamedEntityGraph(name = "User.friends",
                 attributeNodes = @NamedAttributeNode("friends")),
-        @NamedEntityGraph(name = "User.friendRequest",
-                attributeNodes = @NamedAttributeNode("friendRequest"))
+        @NamedEntityGraph(name = "User.friendRequests",
+                attributeNodes = @NamedAttributeNode("friendRequests"))
 })
 public class User {
 
@@ -64,7 +64,7 @@ public class User {
     @OneToMany(fetch=FetchType.LAZY)
     @JoinTable(name="askfriend",joinColumns = @JoinColumn(name="friend"),
             inverseJoinColumns = @JoinColumn(name = "asker"))
-    private List<User> friendRequest;
+    private List<User> friendRequests;
 
     public long getId() {
         return id;
@@ -154,11 +154,11 @@ public class User {
         this.friends = friends;
     }
 
-    public List<User> getFriendRequest() {
-        return friendRequest;
+    public List<User> getFriendRequests() {
+        return friendRequests;
     }
 
-    public void setFriendRequest(List<User> friendRequest) {
-        this.friendRequest = friendRequest;
+    public void setFriendRequests(List<User> friendRequests) {
+        this.friendRequests = friendRequests;
     }
 }

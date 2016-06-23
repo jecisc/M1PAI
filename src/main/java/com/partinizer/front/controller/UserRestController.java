@@ -145,14 +145,6 @@ public class UserRestController {
         return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.BAD_REQUEST);
     }
 
-    /*@CrossOrigin
-    @RequestMapping(value="/get", method= RequestMethod.GET)
-    public ResponseEntity<User> getUser(Authentication authentication) throws UserDoesNotExistException {
-
-        return new ResponseEntity<>(getUserFromAuthentication(authentication), HttpStatus.OK);
-
-    }*/
-
     @CrossOrigin
     @RequestMapping(value="/get", method= RequestMethod.GET)
     public ResponseEntity<User> getUser(Authentication authentication, HttpServletRequest request) throws UserDoesNotExistException {
@@ -170,7 +162,6 @@ public class UserRestController {
 
         try {
             User user = getUserFromAuthentication(authentication);
-            user = userService.getAllFriends(user.getId()); //TODO This is really weird. I should take a look later to understand what is going on
             return new  ResponseEntity<>(user.getFriends(),HttpStatus.OK);
         } catch (UserDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -229,8 +220,6 @@ public class UserRestController {
             JSONObject jsonWriter = new JSONObject();
             jsonWriter.put("result",result);
             return new ResponseEntity<>(jsonWriter.toJSONString(),HttpStatus.OK);
-
-            //return new ResponseEntity<>(userService.getNumberOfUsersFilterByPseudo(pseudoFilter),HttpStatus.OK);
         }catch (UserDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

@@ -1,7 +1,6 @@
 package com.partinizer.data.repository;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.partinizer.data.entity.User;
 import org.springframework.data.jpa.repository.Modifying;
@@ -68,22 +67,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Modifying
     @Query(value="delete from askfriend where asker=?2 and friend=?1",nativeQuery = true)
     void deleteFriendRequest(long idUser,long idFriend);
-
-    /**
-     * I am a query to retrieve a friend by his id.
-     * @param id The id of the friend.
-     * @return The friend matching the id.
-     */
-    @EntityGraph(value="User.friends", type= EntityGraph.EntityGraphType.LOAD)
-    User getFriendsById(long id);
-
-    /**
-     * I am a query to retrieve a Friend that requested a user by his id.
-     * @param id The id of the friend.
-     * @return The friend matching the id.
-     */
-    @EntityGraph(value="User.friendRequest", type= EntityGraph.EntityGraphType.LOAD)
-    User getFriendRequestById(long id);
 
     /**
      * I am a query to get the users whose pseudo beginning match a string.

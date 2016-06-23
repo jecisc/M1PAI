@@ -84,7 +84,7 @@ public class FriendRequestController {
         try {
             User user = getUserFromAuthentication(authentication);
             if(user.getFriends()!=null){ //TODO getFriends should not be able to return null but raise an error if there is a problem
-                return new ResponseEntity<>(userService.getAllFriendRequest(user.getId()).getFriendRequest(), HttpStatus.OK);
+                return new ResponseEntity<>(user.getFriendRequests(), HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (UserDoesNotExistException e) {
@@ -103,7 +103,7 @@ public class FriendRequestController {
             // TODO this is bad. Instead I should directly use a request that will do a `count(*)` but for now, no time.
             User user = getUserFromAuthentication(authentication);
             if(user.getFriends()!=null){ //TODO getFriends should not be able to return null but raise an error if there is a problem
-                jsonWriter.put("number", String.valueOf(userService.getAllFriendRequest(user.getId()).getFriendRequest().size()));
+                jsonWriter.put("number", String.valueOf(user.getFriendRequests().size()));
                 return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.OK);
             }
             jsonWriter.put("number", null);

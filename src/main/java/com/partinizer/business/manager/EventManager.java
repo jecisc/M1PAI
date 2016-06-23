@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * TODO
+ * I am a manager which should contains the behavior of the Events of the project.
  */
 @Component
 public class EventManager {
@@ -39,6 +39,12 @@ public class EventManager {
         return event;
     }
 
+    /**
+     * I get all the events of a participant
+     * @param user The user to get the events.
+     * @return All the events of the user.
+     * @throws EventDoesNotExistException
+     */
     public List<Event> getEventsByParticipantId(User user) throws EventDoesNotExistException {
         List<Event> events=this.eventRepository.getEventsByParticipantId(user.getId());
         if(events==null){
@@ -50,8 +56,12 @@ public class EventManager {
         return events;
     }
 
-
-
+    /**
+     * I get all the events created by a user
+     * @param user The user.
+     * @return All the events created by the user.
+     * @throws EventDoesNotExistException
+     */
     public List<Event> getEventsCreatedBy(User user) throws EventDoesNotExistException {
         List<Event> events=this.eventRepository.getEventsCreatedBy(user.getId());
         if(events==null){

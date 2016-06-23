@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Created by vincent on 30/05/2016.
+ * I am a manager which should contains the behavior of the Resources of the project.
  */
 @Component
 public class ResourceManager {
 
-    private ResourceRepository resourceRepository;
+    protected ResourceRepository resourceRepository;
 
     @Autowired
     public ResourceManager(ResourceRepository resourceRepository) {
@@ -25,13 +25,4 @@ public class ResourceManager {
         return resourceRepository.findAll();
     }
 
-
-
-    public ResourceRepository getResourceRepository() {
-        return resourceRepository;
-    }
-
-    public void setResourceRepository(ResourceRepository resourceRepository) {
-        this.resourceRepository = resourceRepository;
-    }
 }

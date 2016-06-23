@@ -200,7 +200,7 @@ public class UserManagerTest {
     public void getFriendRequestById(){
 
        User user_= userManager.getAllFriendRequests(3);
-        assertNotNull(user_.getFriendRequest());
+        assertNotNull(user_.getFriendRequests());
     }*/
 
   /*  @Test
