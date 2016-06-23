@@ -1,32 +1,22 @@
 package com.partinizer.business.exceptions;
 
 /**
- * Created by vincent on 08/06/2016.
+ * I am an exception raised when a participant could not be found in the database.
  */
 public class ParticipantDoesNotExistException extends Exception {
 
-    public ParticipantDoesNotExistException(String message){
+    protected Long idEvent;
 
+    public ParticipantDoesNotExistException(String message){
         super(message);
     }
 
-    private long idEvent;
-
-    private long idParticipant;
-
-    public long getIdEvent() {
+    public Long getIdEvent() {
         return idEvent;
     }
 
-    public void setIdEvent(long idEvent) {
+    public void setIdEvent(Long idEvent) {
         this.idEvent = idEvent;
     }
 
-    public long getIdParticipant() {
-        return idParticipant;
-    }
-
-    public void setIdParticipant(long idParticipant) {
-        this.idParticipant = idParticipant;
-    }
 }

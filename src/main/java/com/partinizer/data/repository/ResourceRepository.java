@@ -4,9 +4,8 @@ import com.partinizer.data.entity.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Created by vincent on 30/05/2016.
+ * I am a data access layers to manage the Ressource persistence.
  */
-public interface ResourceRepository extends JpaRepository<Resource,Long> {
-
+public interface ResourceRepository extends JpaRepository<Resource, Long> {
 
 }

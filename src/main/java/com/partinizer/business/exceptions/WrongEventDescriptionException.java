@@ -1,7 +1,7 @@
 package com.partinizer.business.exceptions;
 
 /**
- * Created by vincent on 09/06/2016.
+ * I am an exception raised when an event has a wrong description.
  */
 public class WrongEventDescriptionException extends WrongInformationException {
 

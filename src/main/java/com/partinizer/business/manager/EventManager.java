@@ -52,8 +52,8 @@ public class EventManager {
 
 
 
-    public List<Event> getEventsCreated(User user) throws EventDoesNotExistException {
-        List<Event> events=this.eventRepository.getEventsCreated(user.getId());
+    public List<Event> getEventsCreatedBy(User user) throws EventDoesNotExistException {
+        List<Event> events=this.eventRepository.getEventsCreatedBy(user.getId());
         if(events==null){
             EventDoesNotExistException exception = new EventDoesNotExistException();
             exception.setId(user.getId());
@@ -63,8 +63,8 @@ public class EventManager {
         return events;
     }
 
-    public List<Event> getEventsInvitation(User user) throws EventDoesNotExistException {
-        List<Event> events=this.eventRepository.getEventsInvitation(user.getId());
+    public List<Event> getEventsInvitationsOf(User user) throws EventDoesNotExistException {
+        List<Event> events=this.eventRepository.getEventsInvitationsOf(user.getId());
         if(events==null){
             EventDoesNotExistException exception = new EventDoesNotExistException();
             exception.setId(user.getId());

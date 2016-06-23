@@ -52,12 +52,12 @@ public class EventService {
         return eventManager.getEventsByParticipantId(user);
     }
 
-    public List<Event> getEventsInvitation(User user) throws EventDoesNotExistException {
-        return eventManager.getEventsInvitation(user);
+    public List<Event> getEventsInvitationsOf(User user) throws EventDoesNotExistException {
+        return eventManager.getEventsInvitationsOf(user);
     }
 
-    public List<Event> getEventsCreated(User user) throws EventDoesNotExistException {
-        return eventManager.getEventsCreated(user);
+    public List<Event> getEventsCreatedBy(User user) throws EventDoesNotExistException {
+        return eventManager.getEventsCreatedBy(user);
     }
 
     public List<Event> getAllEvents() {

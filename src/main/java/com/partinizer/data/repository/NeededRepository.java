@@ -5,9 +5,8 @@ import com.partinizer.data.entity.NeededKeyId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Created by vincent on 19/06/2016.
+ * I am a data access layers to manage the Needed persistence.
  */
-public interface NeededRepository extends JpaRepository<Needed,NeededKeyId> {
-
+public interface NeededRepository extends JpaRepository<Needed, NeededKeyId> {
 
 }

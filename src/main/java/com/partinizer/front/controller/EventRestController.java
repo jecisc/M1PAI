@@ -104,10 +104,10 @@ public class EventRestController {
     }
 
     @RequestMapping(value = "/myEventsInvitation", method=RequestMethod.GET)
-    public ResponseEntity<List<Event>> getEventsInvitation(Authentication authentication) {
+    public ResponseEntity<List<Event>> getEventsInvitationsOf(Authentication authentication) {
 
         try {
-            return new ResponseEntity<>(eventService.getEventsInvitation(getUserFromAuthentication(authentication)),HttpStatus.OK);
+            return new ResponseEntity<>(eventService.getEventsInvitationsOf(getUserFromAuthentication(authentication)),HttpStatus.OK);
         } catch (EventDoesNotExistException | UserDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -115,10 +115,10 @@ public class EventRestController {
     }
 
     @RequestMapping(value = "/myEventsCreated", method=RequestMethod.GET)
-    public ResponseEntity<List<Event>> getEventsCreated(Authentication authentication) {
+    public ResponseEntity<List<Event>> getEventsCreatedBy(Authentication authentication) {
 
         try {
-            return new ResponseEntity<>(eventService.getEventsCreated(getUserFromAuthentication(authentication)),HttpStatus.OK);
+            return new ResponseEntity<>(eventService.getEventsCreatedBy(getUserFromAuthentication(authentication)),HttpStatus.OK);
         } catch (EventDoesNotExistException | UserDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -126,11 +126,11 @@ public class EventRestController {
     }
 
     @RequestMapping(value = "/numberOfEventsInvitations", method=RequestMethod.GET)
-    public ResponseEntity<String> getNumberEventsInvitation(Authentication authentication) {
+    public ResponseEntity<String> getNumberEventsInvitationsOf(Authentication authentication) {
         JSONObject jsonWriter = new JSONObject();
         try {
             // TODO this is bad. Instead I should directly use a request that will do a `count(*)` but for now, no time.
-            jsonWriter.put("number", String.valueOf(eventService.getEventsInvitation(getUserFromAuthentication(authentication)).size()));
+            jsonWriter.put("number", String.valueOf(eventService.getEventsInvitationsOf(getUserFromAuthentication(authentication)).size()));
             return new ResponseEntity<>(jsonWriter.toJSONString(), HttpStatus.OK);
         } catch (EventDoesNotExistException | UserDoesNotExistException e) {
             jsonWriter.put("number", null);
